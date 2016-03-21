@@ -5,7 +5,7 @@ import java.util.List;
 public interface GuestManager {
     public void createGuest(Guest guest);
 
-    public Guest getGuestById(Long id);
+    public Guest getGuestByID(Long id);
 
     public List<Guest> getAllGuests();
 

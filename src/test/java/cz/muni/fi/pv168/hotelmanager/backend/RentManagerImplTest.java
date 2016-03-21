@@ -20,7 +20,7 @@ public class RentManagerImplTest {
     @Test
     public void createRent()
     {
-        Room room = new Room(Long.valueOf(42), Long.valueOf(3), true, BigDecimal.valueOf(50));
+        Room room = new Room(Long.valueOf(42), 3, true, BigDecimal.valueOf(50));
         Guest guest = new Guest("a", "b", "c");
         try {
             Rent rent = new Rent(LocalDate.now(), LocalDate.now().plusDays(3), room, guest);
@@ -29,49 +29,59 @@ public class RentManagerImplTest {
         catch (Exception e) {
         }
 
-        room.setId(Long.valueOf(1));
-        guest.setId(Long.valueOf(2));
+        room.setID(Long.valueOf(1));
+        guest.setID(Long.valueOf(2));
         Rent rent = new Rent(LocalDate.now(), LocalDate.now().plusDays(3), room, guest);
         manager.createRent(rent);
-        Rent r = manager.getRentById(rent.getId());
+        Rent r = manager.getRentById(rent.getID());
         assertEquals(rent, r);
+        assertNotSame(rent, r);
     }
 
     @Test
     public void updateRent()
     {
-        Room room = new Room(Long.valueOf(42), Long.valueOf(3), true, BigDecimal.valueOf(50));
+        Room room = new Room(Long.valueOf(42), 3, true, BigDecimal.valueOf(50));
         Guest guest = new Guest("a", "b", "c");
-        room.setId(Long.valueOf(1));
-        guest.setId(Long.valueOf(2));
+        room.setID(Long.valueOf(1));
+        guest.setID(Long.valueOf(2));
         Rent rent = new Rent(LocalDate.now(), LocalDate.now().plusDays(3), room, guest);
         manager.createRent(rent);
-        Rent r = manager.getRentById(rent.getId());
+        Rent r = manager.getRentById(rent.getID());
         assertEquals(rent, r);
         rent.setStartDate(LocalDate.now().plusDays(1));
         rent.setEndDate(LocalDate.now().plusDays(7));
         rent.setGuest(new Guest("d", "e", "f"));
-        rent.setRoom(new Room(Long.valueOf(5), Long.valueOf(2), false, BigDecimal.valueOf(10)));
+        rent.setRoom(new Room(Long.valueOf(5), 2, false, BigDecimal.valueOf(10)));
         manager.updateRent(rent);
-        r = manager.getRentById(rent.getId());
+        r = manager.getRentById(rent.getID());
         assertEquals(rent, r);
+        assertNotSame(rent, r);
+        assertDeepEquals(rent, r);
     }
 
     @Test
     public void deleteRent()
     {
-        Room room = new Room(Long.valueOf(42), Long.valueOf(3), true, BigDecimal.valueOf(50));
+        Room room = new Room(Long.valueOf(42), 3, true, BigDecimal.valueOf(50));
         Guest guest = new Guest("a", "b", "c");
-        room.setId(Long.valueOf(1));
-        guest.setId(Long.valueOf(2));
+        room.setID(Long.valueOf(1));
+        guest.setID(Long.valueOf(2));
         Rent rent = new Rent(LocalDate.now(), LocalDate.now().plusDays(3), room, guest);
         manager.createRent(rent);
-        rent.setId(null);
+        rent.setID(null);
         manager.createRent(rent);
         List<Rent> list = manager.getAllRents();
         assertEquals(list.size(), 2);
         manager.deleteRent(rent);
         list = manager.getAllRents();
         assertEquals(list.size(), 1);
+    }
+
+    private void assertDeepEquals(Rent expected, Rent real) {
+        assertEquals("id value is not equal", expected.getID(), real.getID());
+        assertEquals("start date is not equal", expected.getStartDate(), real.getStartDate());
+        assertEquals("end date is not equal", expected.getEndDate(), real.getEndDate());
+        assertEquals("room is not equal", expected.getRoom(), real.getRoom());
     }
 }

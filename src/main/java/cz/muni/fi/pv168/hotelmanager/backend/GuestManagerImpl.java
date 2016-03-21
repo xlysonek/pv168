@@ -9,7 +9,7 @@ public class GuestManagerImpl implements GuestManager {
     }
 
     @Override
-    public Guest getGuestById(Long id) {
+    public Guest getGuestByID(Long id) {
         return null;
     }
 

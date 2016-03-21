@@ -3,42 +3,88 @@ package cz.muni.fi.pv168.hotelmanager.backend;
 import java.time.LocalDate;
 
 public class Rent {
-    public Long getId() {
+    private Long id;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Room room;
+    private Guest guest;
+
+    /**
+     * Getter for rent id
+     * @return
+     */
+    public Long getID() {
         return id;
     }
 
-    public void setId(Long id) {
+    /**
+     * Setter for rent id
+     * @paarm id
+     */
+    public void setID(Long id) {
         this.id = id;
     }
 
+    /**
+     * Getter for date of beginning of accommodation
+     * @return
+     */
     public LocalDate getStartDate() {
         return startDate;
     }
 
+    /**
+     * Setter for date of beginning of accommodation
+     * @param startDate
+     */
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
+    /**
+     * Getter for date of end of accommodation
+     * @return
+     */
     public LocalDate getEndDate() {
         return endDate;
     }
 
+    /**
+     * Setter for date of end of accommodation
+     * @param endDate
+     */
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
+    /**
+     * Getter for room
+     * @return
+     */
     public Room getRoom() {
         return room;
     }
 
+    /**
+     * Setter for room
+     * @param room
+     */
     public void setRoom(Room room) {
         this.room = room;
     }
 
+    /**
+     * Getter for guest
+     * @return
+     */
     public Guest getGuest() {
         return guest;
     }
 
+    /**
+     * Setter for guest
+     * @param guest
+     */
     public void setGuest(Guest guest) {
         this.guest = guest;
     }
@@ -50,12 +96,6 @@ public class Rent {
         this.room = room;
         this.guest = guest;
     }
-
-    private Long id;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Room room;
-    private Guest guest;
 
     @Override
     public boolean equals(Object o) {
