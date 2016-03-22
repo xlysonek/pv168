@@ -3,6 +3,7 @@ package cz.muni.fi.pv168.hotelmanager.backend;
 import java.util.List;
 
 public class GuestManagerImpl implements GuestManager {
+    
     @Override
     public void createGuest(Guest guest) {
 
@@ -10,7 +11,7 @@ public class GuestManagerImpl implements GuestManager {
 
     @Override
     public Guest getGuestByID(Long id) {
-        return null;
+        return null;  
     }
 
     @Override
