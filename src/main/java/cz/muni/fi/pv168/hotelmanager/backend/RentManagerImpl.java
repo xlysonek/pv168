@@ -53,4 +53,9 @@ public class RentManagerImpl implements RentManager {
 	public List<Rent> getAllRents() {
 		return null;
 	}
+
+        @Override
+        public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate) {
+                return null;
+        }
 }

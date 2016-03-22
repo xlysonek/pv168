@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
@@ -174,12 +173,8 @@ public class RoomManagerImpl implements RoomManager {
             throw new RoomManagementException(" There has been an error while getting all rooms");
         }
     }
-
-    @Override
-    public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
+    
     private void validate(Room room) throws IllegalArgumentException {
         if (room == null) {
             throw new IllegalArgumentException("Room wasnt initialized.");

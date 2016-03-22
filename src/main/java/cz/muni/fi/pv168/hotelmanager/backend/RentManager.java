@@ -76,4 +76,13 @@ public interface RentManager {
 	 * @return
 	 */
 	public List<Rent> getAllRents();
+        
+        /**  
+        * Gets all currently empty rooms
+        * @param startDate
+         * @param endDate
+        * @return
+        */
+
+        public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate); // p?esunuto z room kv?li snazší manipulovatelnosti
 }
