@@ -1,6 +1,11 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
 public class Guest {
+    private Long id;
+    private String name;
+    private String phone;
+    private String address;
+
     public Long getID() {
         return id;
     }
@@ -40,11 +45,6 @@ public class Guest {
         this.address = address;
     }
 
-    private Long id;
-    private String name;
-    private String phone;
-    private String address;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,5 +67,15 @@ public class Guest {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Guest{" +
+                "\n  id=" + id +
+                "\n  name=" + name +
+                "\n  phone=" + phone +
+                "\n  address=" + address +
+                "\n}";
     }
 }

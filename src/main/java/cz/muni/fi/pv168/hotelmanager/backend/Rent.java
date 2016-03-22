@@ -122,4 +122,15 @@ public class Rent {
         result = 31 * result + (guest != null ? guest.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Rent{" +
+                "\n  id=" + id +
+                "\n  startDate=" + startDate +
+                "\n  endDate=" + endDate +
+                "\n  guest=" + guest +
+                "\n  room=" + room +
+                "\n}";
+    }
 }
