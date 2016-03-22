@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -67,7 +68,7 @@ public class GuestManagerImpl implements GuestManager {
 			}
 		}
 		catch (SQLException e) {
-			throw new DatabaseException("Failed to get guest with id " + id);
+			throw new DatabaseException("Failed to get guest with id " + id, e);
 		}
 	}
 
@@ -82,17 +83,71 @@ public class GuestManagerImpl implements GuestManager {
 
 	@Override
 	public List<Guest> getAllGuests() {
-		return null;
+		try (Connection conn = dataSource.getConnection();
+		     PreparedStatement st = conn.prepareStatement("SELECT * FROM guest")
+		    ) {
+			ResultSet set = st.executeQuery();
+			List<Guest> ret = new ArrayList<>();
+			while (set.next()) {
+				ret.add(resultSetToGuest(set));
+			}
+			return ret;
+		}
+		catch (SQLException e) {
+			throw new DatabaseException("Failed to get all guests", e);
+		}
 	}
 
 	@Override
 	public void updateGuest(Guest guest) {
+		validate(guest);
+		if (guest.getID() == null) {
+			throw new IllegalArgumentException("Guest id is null");
+		}
+		try (Connection conn = dataSource.getConnection();
+		     PreparedStatement st = conn.prepareStatement(
+		            "UPDATE guest SET name=?, phone=?, address=? WHERE id=?")
+		    ) {
+			st.setString(1, guest.getName());
+			st.setString(2, guest.getPhone());
+			st.setString(3, guest.getAddress());
+			st.setLong(4, guest.getID());
 
+			int n = st.executeUpdate();
+			if (n == 0) {
+				throw new DatabaseException("Guest with id " + guest.getID() + " was not found in database");
+			}
+			else if (n != 1) {
+				throw new DatabaseException("Wrong number of updated rows: " + n);
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException("Failed to update guest: " + guest, e);
+		}
 	}
 
 	@Override
 	public void deleteGuest(Guest guest) {
-
+		validate(guest);
+		if (guest.getID() == null) {
+			throw new IllegalArgumentException("Guest id is null");
+		}
+		try (Connection conn = dataSource.getConnection();
+		     PreparedStatement st = conn.prepareStatement(
+		            "DELETE FROM guest WHERE id=?")
+		    ) {
+			st.setLong(1, guest.getID());
+			int n = st.executeUpdate();
+			if (n == 0) {
+				throw new DatabaseException("Guest with id " + guest.getID() + " was not found in database");
+			}
+			else if (n != 1) {
+				throw new DatabaseException("Oops, more than one row deleted. Guest id: " + guest.getID());
+			}
+		}
+		catch (SQLException e) {
+			throw new DatabaseException("Failed to delete guest with id " + guest.getID(), e);
+		}
 	}
 
 	private void validate(Guest guest) {
