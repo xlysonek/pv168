@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -64,7 +65,7 @@ public class RoomManagerImpl implements RoomManager {
                 if (table.next()){
                     throw new RoomManagementException("Internal error:" + 
                             "More entities with the same id found" + id + 
-                            "\nEntities found:" + room + "," + resultSetToRoom(table));
+                            File.separator + " Entities found:" + room + "," + resultSetToRoom(table));
                 }
                 
                 return room;
