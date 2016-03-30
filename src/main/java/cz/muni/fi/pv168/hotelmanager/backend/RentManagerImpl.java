@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 public class RentManagerImpl implements RentManager {
 	
         private final DataSource dataSource;
+        private final String dateSubquery = "NOT ((startDate < ? AND endDate < ?) OR (startDate > ? AND endDate > ?))";
         
         public RentManagerImpl(DataSource dataSource){
             this.dataSource = dataSource;
@@ -28,15 +29,13 @@ public class RentManagerImpl implements RentManager {
             
             try( Connection connection = dataSource.getConnection();
                  PreparedStatement statement = connection.prepareStatement(""
-                         + "INSERT INTO RENT (startDate, endDate, room, guest) VALUES (?,?,?,?)", 
+                         + "INSERT INTO RENT (startDate, endDate, roomID, guestID) VALUES (?,?,?,?)", 
                          Statement.RETURN_GENERATED_KEYS)){
-                statement.setDate(1, (java.sql.Date) 
-                        Date.from(rent.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                statement.setDate(2, (java.sql.Date) 
-                        Date.from(rent.getEndDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                statement.setObject(3, rent.getRoom());
-                statement.setObject(4, rent.getGuest());
-                
+                statement.setDate(1, java.sql.Date.valueOf(rent.getStartDate()));
+                statement.setDate(2, java.sql.Date.valueOf(rent.getEndDate()));
+                statement.setLong(3, rent.getRoom().getID());
+                statement.setLong(4, rent.getGuest().getID());
+
                 int addedRows = statement.executeUpdate();
                 if (addedRows != 1){
                     throw new DatabaseException("Internal error: More rows (" + 
@@ -55,7 +54,7 @@ public class RentManagerImpl implements RentManager {
 	public Rent getRentById(Long id) {
             try (Connection connection = dataSource.getConnection();
                     PreparedStatement statement = connection.prepareStatement(
-                            "SELECT id, startDate, endDate, room, guest FROM rent WHERE id = ?")){
+                            "SELECT id, startDate, endDate, roomID, guestID FROM rent WHERE id = ?")){
                 
                 statement.setLong(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -86,15 +85,13 @@ public class RentManagerImpl implements RentManager {
             }
             
             try (Connection connection = dataSource.getConnection();
-                    PreparedStatement statement = connection.prepareStatement("UPDATE Rent SET "
-                            + "startDate = ?, endDate = ?, room = ?, guest = ? WHERE id = ?")){
+                    PreparedStatement statement = connection.prepareStatement("UPDATE rent SET "
+                            + "startDate = ?, endDate = ?, roomID = ?, guestID = ? WHERE id = ?")){
                 
-                statement.setDate(1, (java.sql.Date) 
-                        Date.from(rent.getStartDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                statement.setDate(2, (java.sql.Date) 
-                        Date.from(rent.getEndDate().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                statement.setObject(3, rent.getRoom());
-                statement.setObject(4, rent.getGuest());
+                statement.setDate(1, java.sql.Date.valueOf(rent.getStartDate()));
+                statement.setDate(2, java.sql.Date.valueOf(rent.getEndDate()));
+                statement.setLong(3, rent.getRoom().getID());
+                statement.setLong(4, rent.getGuest().getID());
                 statement.setLong(5, rent.getID());
                 
                 int count = statement.executeUpdate();
@@ -145,7 +142,7 @@ public class RentManagerImpl implements RentManager {
                 
                 try (Connection connection = dataSource.getConnection();
                         PreparedStatement statement = connection.prepareStatement(
-                                "SELECT id, startDate, endDate, room, guest FROM rent WHERE guest.id = ?")){ 
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent WHERE guestID = ?")){ 
                     
                     statement.setLong(1, guestId);
                     
@@ -177,14 +174,14 @@ public class RentManagerImpl implements RentManager {
                 }
                 try (Connection connection = dataSource.getConnection();
                         PreparedStatement statement = connection.prepareStatement(
-                                "SELECT id, startDate, endDate, room, guest FROM rent "
-                                        + "WHERE guest.id = ? AND startDate = ? AND endDate = ?")){ //????
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent "
+                                        + "WHERE guestID = ? AND " + dateSubquery)){
                     
                     statement.setLong(1, guestId);
-                    statement.setDate(2, (java.sql.Date) 
-                        Date.from(startDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                    statement.setDate(3, (java.sql.Date) 
-                        Date.from(endDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                    statement.setDate(2, java.sql.Date.valueOf(startDate));
+                    statement.setDate(3, java.sql.Date.valueOf(endDate));
+                    statement.setDate(4, java.sql.Date.valueOf(startDate));
+                    statement.setDate(5, java.sql.Date.valueOf(endDate));
                     
                     ResultSet resultSet = statement.executeQuery();
                     List<Rent> result = new ArrayList<>();
@@ -207,7 +204,7 @@ public class RentManagerImpl implements RentManager {
                 
                 try (Connection connection = dataSource.getConnection();
                         PreparedStatement statement = connection.prepareStatement(
-                                "SELECT id, startDate, endDate, room, guest FROM rent WHERE room.id = ?")){ 
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent WHERE roomID = ?")){ 
                     
                     statement.setLong(1, roomId);
                     
@@ -241,14 +238,14 @@ public class RentManagerImpl implements RentManager {
                 
                 try (Connection connection = dataSource.getConnection();
                         PreparedStatement statement = connection.prepareStatement(
-                                "SELECT id, startDate, endDate, room, guest FROM rent "
-                                        + "WHERE room.id = ? AND startDate = ? AND endDate = ?")){ 
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent "
+                                        + "WHERE roomID = ? AND " + dateSubquery)){ 
                     
                     statement.setLong(1, roomId);
-                    statement.setDate(2, (java.sql.Date) 
-                            Date.from(startDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                    statement.setDate(3, (java.sql.Date) 
-                            Date.from(endDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                    statement.setDate(2, java.sql.Date.valueOf(startDate));
+                    statement.setDate(3, java.sql.Date.valueOf(endDate));
+                    statement.setDate(4, java.sql.Date.valueOf(startDate));
+                    statement.setDate(5, java.sql.Date.valueOf(endDate));
                     
                     ResultSet resultSet = statement.executeQuery();
                     List<Rent> result = new ArrayList<>();
@@ -277,12 +274,12 @@ public class RentManagerImpl implements RentManager {
                 
                 try (Connection connection = dataSource.getConnection();
                         PreparedStatement statement = connection.prepareStatement(
-                                "SELECT id, startDate, endDate, room, guest FROM rent WHERE startDate = ?, endDate = ?")){ 
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent WHERE " + dateSubquery)){ 
                     
-                    statement.setDate(1, (java.sql.Date) 
-                        Date.from(startDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                    statement.setDate(2, (java.sql.Date) 
-                        Date.from(endDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                    statement.setDate(1, java.sql.Date.valueOf(startDate));
+                    statement.setDate(2, java.sql.Date.valueOf(endDate));
+                    statement.setDate(3, java.sql.Date.valueOf(startDate));
+                    statement.setDate(4, java.sql.Date.valueOf(endDate));
                     
                     ResultSet resultSet = statement.executeQuery();
                     List<Rent> result = new ArrayList<>();
@@ -300,7 +297,7 @@ public class RentManagerImpl implements RentManager {
 	public List<Rent> getAllRents() {
 		try (Connection connection = dataSource.getConnection();
                         PreparedStatement statement = connection.prepareStatement(
-                                "SELECT id, startDate, endDate, room, guest FROM rent")){ 
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent")){ 
                     
                     ResultSet resultSet = statement.executeQuery();
                     List<Rent> result = new ArrayList<>();
@@ -324,6 +321,12 @@ public class RentManagerImpl implements RentManager {
             }
             if (rent.getRoom() == null){
                 throw new IllegalArgumentException("There is no room to be asigned by rent.");
+            }
+            if (rent.getGuest().getID() == null) {
+            	throw new IllegalArgumentException("Guest id is null");
+            }
+            if (rent.getRoom().getID() == null) {
+            	throw new IllegalArgumentException("Room id is null");
             }
             if (rent.getEndDate().isBefore(rent.getStartDate())){
                 throw new IllegalArgumentException("Rent ends before it begins.");
@@ -355,10 +358,16 @@ public class RentManagerImpl implements RentManager {
     private Rent resultSetToRent(ResultSet resultSet) throws SQLException {
         Rent rent = new Rent();
         rent.setID(resultSet.getLong("id"));
-        rent.setStartDate((LocalDate) resultSet.getObject("startDate"));
-        rent.setEndDate((LocalDate) resultSet.getObject("endDate"));
-        rent.setRoom((Room) resultSet.getObject("room"));   //??
-        rent.setGuest((Guest) resultSet.getObject("guest"));
+        rent.setStartDate(resultSet.getDate("startDate").toLocalDate());
+        rent.setEndDate(resultSet.getDate("endDate").toLocalDate());
+        
+        RoomManager rm = new RoomManagerImpl(dataSource);
+        Room room = rm.getRoomByID(resultSet.getLong("roomID"));
+        rent.setRoom(room);
+        
+        GuestManager gm = new GuestManagerImpl(dataSource);
+        Guest guest = gm.getGuestByID(resultSet.getLong("guestID"));
+        rent.setGuest(guest);
         return rent;
     }
 
