@@ -16,6 +16,10 @@ public class GuestManagerImpl implements GuestManager {
 		this.dataSource = dataSource;
 	}
 
+    GuestManagerImpl() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 	@Override
 	public void createGuest(Guest guest) {
 		validate(guest);

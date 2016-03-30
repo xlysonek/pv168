@@ -174,7 +174,35 @@ public class RoomManagerImpl implements RoomManager {
             throw new RoomManagementException(" There has been an error while getting all rooms");
         }
     }
-    
+    /*
+        @Override
+        public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate) {
+                if (startDate == null){
+                    throw new IllegalArgumentException("startDate is null");
+                }
+                if (endDate == null){
+                    throw new IllegalArgumentException("endDate is null");
+                }
+                if (startDate.isAfter(endDate)){
+                    throw new IllegalArgumentException("startDate and endDate differs by negative value.");
+                }
+                
+                try (Connection connection = dataSource.getConnection();
+                        PreparedStatement statement = connection.prepareStatement(
+                                "SELECT id, number, capacity, service, price FROM room "
+                                        + "WHERE room IN(Rent.startDate > ? AND Rent.endDate < ?)")){ 
+                    
+                    ResultSet resultSet = statement.executeQuery();
+                    List<Room> result = new ArrayList<>();
+                    
+                    while(resultSet.next()){
+                        result.add(resultSetToRoom(resultSet));
+                    }
+                    return result;
+                } catch (SQLException ex) {
+                throw new DatabaseException("Error when retrieving list of rents by date", ex);
+            }
+        }*/
     
     private void validate(Room room) throws IllegalArgumentException {
         if (room == null) {
@@ -213,7 +241,7 @@ public class RoomManagerImpl implements RoomManager {
         }
     }
 
-    private Room resultSetToRoom(ResultSet table) throws SQLException {
+    public Room resultSetToRoom(ResultSet table) throws SQLException {
         Room room = new Room();
         room.setID(table.getLong("id"));
         room.setNumber(table.getLong("number"));

@@ -9,6 +9,14 @@ public class Rent {
 	private Room room;
 	private Guest guest;
 
+        /**
+         * Empty constructor for Rent
+         */
+        
+        public Rent(){
+            
+        }
+        
 	/**
 	 * Getter for rent id
 	 * @return
