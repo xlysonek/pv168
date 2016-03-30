@@ -41,7 +41,7 @@ public class GuestManagerImpl implements GuestManager {
 				                            + ") for guest: " + guest);
 			}
 
-			ResultSet keys = st.getResultSet();
+			ResultSet keys = st.getGeneratedKeys();
 			keys.next();
 			guest.setID(keys.getLong(1));
 		}

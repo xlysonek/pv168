@@ -29,7 +29,7 @@ public class RoomManagerImpl implements RoomManager {
         
         try(Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO ROOM (number, capacity, service, price)", Statement.RETURN_GENERATED_KEYS)) {
+                    "INSERT INTO room (number, capacity, service, price) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
             
             statement.setLong(1, room.getNumber());
             statement.setInt(2, room.getCapacity());
@@ -46,7 +46,7 @@ public class RoomManagerImpl implements RoomManager {
             room.setID(getKey(key, room));
             
         }catch (SQLException ex){
-            throw new RoomManagementException("Room insertion was interupted by an error." + room, ex);
+            throw new RoomManagementException("Room insertion was interupted by an error." + room + ex, ex);
         }
     }
 
@@ -88,14 +88,14 @@ public class RoomManagerImpl implements RoomManager {
             throw new IllegalArgumentException("updated data are invalid. Room id doesnt exist.");
         }
         try (Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement("UPDATE Room SET"
+                PreparedStatement statement = connection.prepareStatement("UPDATE room SET"
                         + " number = ?, capacity = ?, service = ?, price = ? WHERE id = ?")){
             
-            statement.setLong(1, room.getID());
-            statement.setLong(2, room.getNumber());
-            statement.setInt(3, room.getCapacity());
-            statement.setBoolean(4, room.getService());
-            statement.setBigDecimal(5, room.getPrice());
+            statement.setLong(1, room.getNumber());
+            statement.setInt(2, room.getCapacity());
+            statement.setBoolean(3, room.getService());
+            statement.setBigDecimal(4, room.getPrice());
+            statement.setLong(5, room.getID());
             
             int count = statement.executeUpdate();
             if (count == 0){
@@ -141,8 +141,9 @@ public class RoomManagerImpl implements RoomManager {
     @Override
     public List<Room> getRoomByNumber(Long number) {
         try( Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT id, number, capacity, service, price WHERE number = ?")){
+                PreparedStatement statement = connection.prepareStatement("SELECT id, number, capacity, service, price FROM room WHERE number = ?")){
             
+        	statement.setLong(1, number);
             ResultSet table = statement.executeQuery();
             
             List<Room> result = new ArrayList<>();
@@ -160,7 +161,7 @@ public class RoomManagerImpl implements RoomManager {
     @Override
     public List<Room> getAllRooms() {
         try( Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT id, number, capacity, service, price")){
+                PreparedStatement statement = connection.prepareStatement("SELECT id, number, capacity, service, price FROM room")){
             
             ResultSet table = statement.executeQuery();
             

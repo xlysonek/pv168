@@ -1,18 +1,29 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.sql.SQLException;
+import java.util.List;
+import javax.sql.DataSource;
 import static org.junit.Assert.*;
 
-import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class GuestManagerImplTest {
+public class GuestManagerImplTest extends TestsCommon {
     private GuestManager manager;
+    private DataSource source;
 
     @Before
-    public void setUp()
+    public void setUp() throws SQLException
     {
-        manager = new GuestManagerImpl();
+        source = getDataSource();
+        createTables(source);
+        manager = new GuestManagerImpl(source);
+    }
+    
+    @After
+    public void tearDown() throws DatabaseException {
+    	dropTables(source);
     }
 
     @Test
@@ -31,7 +42,7 @@ public class GuestManagerImplTest {
     @Test(expected = Exception.class)
     public void getGuestById()
     {
-        manager.getGuestByID(new Long(0));
+        manager.getGuestByID(null);
     }
 
     @Test
@@ -66,6 +77,21 @@ public class GuestManagerImplTest {
         assertEquals(guest.getName(), "a");
         assertEquals(guest.getPhone(), "b");
         assertEquals(guest.getAddress(), "c");
+    }
+    
+    @Test
+    public void getAllGuests()
+    {
+    	Guest g1 = new Guest("a", "b", "c");
+    	Guest g2 = new Guest("d", "e", "f");
+    	manager.createGuest(g1);
+    	manager.createGuest(g2);
+    	List<Guest> res = manager.getAllGuests();
+    	assertEquals(res.size(), 2);
+    	assertDeepEquals(g1, res.get(0));
+    	assertDeepEquals(g2, res.get(1));
+    	assertNotSame(g1, res.get(0));
+    	assertNotSame(g2, res.get(1));
     }
 
     private void assertDeepEquals(Guest expected, Guest real)

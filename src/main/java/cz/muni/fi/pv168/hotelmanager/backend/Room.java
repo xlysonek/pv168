@@ -143,8 +143,8 @@ public class Room {
      */
     @Override
     public String toString(){
-        return "Room ID:" + this.id + "/nRoom number:" + this.number + "/nRoom capacity"
-                + this.capacity + "/n Room service:" + this.service + "\n Room price"
+        return "Room ID:" + this.id + "\nRoom number:" + this.number + "\nRoom capacity"
+                + this.capacity + "\n Room service:" + this.service + "\n Room price"
                 + this.price;
     }
 }

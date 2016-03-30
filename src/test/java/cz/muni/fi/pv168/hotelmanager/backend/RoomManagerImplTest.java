@@ -1,8 +1,12 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.sql.DataSource;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
@@ -13,6 +17,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,13 +26,20 @@ import org.junit.Test;
  *
  * @author Matlafous
  */
-public class RoomManagerImplTest {
-
+public class RoomManagerImplTest extends TestsCommon {
+	private DataSource source;
     private RoomManagerImpl manager;
 
     @Before
-    public void setUp() {
-        manager = new RoomManagerImpl();
+    public void setUp() throws SQLException {
+    	source = getDataSource();
+    	createTables(source);
+        manager = new RoomManagerImpl(source);
+    }
+    
+    @After
+    public void tearDown() throws DatabaseException {
+    	dropTables(source);
     }
 
     @Test
@@ -45,6 +58,15 @@ public class RoomManagerImplTest {
         assertThat("loaded room is the same instance", result, is(not(sameInstance(room))));
         assertDeepEquals(room, result);
 
+    }
+    
+    @Test
+    public void testGetRoomByNumber() {
+    	Room room = new Room(Long.valueOf(42), 3, false, BigDecimal.valueOf(100));
+    	manager.createRoom(room);
+    	List<Room> res = manager.getRoomByNumber(room.getNumber());
+    	assertEquals(res.size(), 1);
+    	assertDeepEquals(room, res.get(0));
     }
 
     @Test(expected = IllegalArgumentException.class)
