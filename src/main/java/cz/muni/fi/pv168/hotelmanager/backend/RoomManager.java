@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -52,12 +53,11 @@ public interface RoomManager {
 
     public void deleteRoom(Room room);
     
-     /**  
-        * Gets all currently empty rooms
-        * @param startDate
-         * @param endDate
-        * @return
-        */
-
-        //public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate); // p?esunuto z room kv?li snazší manipulovatelnosti
+    /**  
+     * Gets all currently empty rooms
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+	public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate);
 }

@@ -76,6 +76,4 @@ public interface RentManager {
 	 * @return
 	 */
 	public List<Rent> getAllRents();
-        
-       
 }

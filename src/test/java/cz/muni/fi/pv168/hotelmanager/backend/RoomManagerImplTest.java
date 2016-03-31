@@ -2,6 +2,7 @@ package cz.muni.fi.pv168.hotelmanager.backend;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import org.junit.Test;
 public class RoomManagerImplTest extends TestsCommon {
 	private DataSource source;
     private RoomManagerImpl manager;
+    private final LocalDate NOW = LocalDate.now();
 
     @Before
     public void setUp() throws SQLException {
@@ -192,6 +194,30 @@ public class RoomManagerImplTest extends TestsCommon {
         assertNull(manager.getRoomByID(room1.getID()));
         assertNotNull(manager.getRoomByID(room2.getID()));
 
+    }
+    
+    @Test
+    public void getFreeRooms() {
+    	Room room1 = newRoom(21l, 5, true, BigDecimal.valueOf(1000));
+        Room room2 = newRoom(22l, 4, false, BigDecimal.valueOf(90));
+        manager.createRoom(room1);
+        manager.createRoom(room2);
+
+        Guest guest1 = new Guest("a", "b", "c");
+        Guest guest2 = new Guest("d", "e", "f");
+        GuestManager guestManager = new GuestManagerImpl(source);
+        guestManager.createGuest(guest1);
+        guestManager.createGuest(guest2);
+        
+        Rent rent1 = new Rent(NOW, NOW.plusDays(2), room1, guest1);
+        Rent rent2 = new Rent(NOW.plusDays(4), NOW.plusDays(7), room2, guest2);
+        RentManager rentManager = new RentManagerImpl(source);
+        rentManager.createRent(rent1);
+        rentManager.createRent(rent2);
+        
+        List<Room> res = manager.getFreeRooms(NOW, NOW.plusDays(3));
+        assertEquals(res.size(), 1);
+        assertDeepEquals(room2, res.get(0));
     }
 
     private static Room newRoom(Long number, int capacity, boolean service, BigDecimal price){
