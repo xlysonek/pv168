@@ -51,8 +51,7 @@ public class RoomManagerImplTest extends TestsCommon {
 
         Long roomId = room.getID();
 
-        //assertThat("created room has null id", room.getID(), is(not(equalTo(room))));
-        assertNotNull("created grave has null id", roomId);
+        assertNotNull("created room has null id", roomId);
 
         Room result = manager.getRoomByID(roomId);
 
