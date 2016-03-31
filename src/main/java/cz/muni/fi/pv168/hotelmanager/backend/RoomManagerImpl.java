@@ -37,11 +37,10 @@ public class RoomManagerImpl implements RoomManager {
             statement.setBoolean(3, room.getService());
             statement.setBigDecimal(4, room.getPrice());
             
-            int addedCapacity = statement.executeUpdate();
-            /*
-            if (addedCapacity != 1){
+            int count = statement.executeUpdate();
+            if (count != 1){
                 throw new RoomManagementException("");
-            }*/
+            }
             
             ResultSet key = statement.getGeneratedKeys();
             room.setID(getKey(key, room));
