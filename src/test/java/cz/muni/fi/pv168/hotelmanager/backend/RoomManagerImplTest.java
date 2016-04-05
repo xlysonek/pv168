@@ -31,7 +31,9 @@ public class RoomManagerImplTest extends TestsCommon {
 	private DataSource source;
     private RoomManagerImpl manager;
     private final LocalDate NOW = LocalDate.now();
-
+    private final double delta = 0.00001;
+    
+    
     @Before
     public void setUp() throws SQLException {
     	source = getDataSource();
@@ -145,34 +147,34 @@ public class RoomManagerImplTest extends TestsCommon {
         assertEquals("Room capacity was not changed.", room.getCapacity(), 666l);
         assertEquals("Room number was changed while changing capacity", room.getNumber(), 21l);
         assertEquals("Service was changed while changing capacity", room.getService(), true);
-        assertEquals("Room price was changed while changing capacity", room.getPrice(), BigDecimal.valueOf(100));
+        assertTrue("Room price was changed while changing capacity", room.getPrice().compareTo(BigDecimal.valueOf(100)) == 0);
 
         room.setNumber(6l);
         manager.updateRoom(room);
         room = manager.getRoomByID(roomID);
 
-        assertEquals("Room capacity was changed while changing room number", room.getCapacity(), 5l);
+        assertEquals("Room capacity was changed while changing room number", room.getCapacity(), 666l);
         assertEquals("Room number was not changed.", room.getNumber(), 6l);
         assertEquals("Service was changed while changing room number", room.getService(), true);
-        assertEquals("Room price was changed while changing room number", room.getPrice(), BigDecimal.valueOf(100));
+        assertTrue("Room price was changed while changing capacity", room.getPrice().compareTo(BigDecimal.valueOf(100)) == 0);
 
         room.setService(false);
         manager.updateRoom(room);
         room = manager.getRoomByID(roomID);
 
-        assertEquals("Room capacity was changed while changing service.", room.getCapacity(), 5l);
-        assertEquals("Room number was changed while changing service", room.getNumber(), 21l);
+        assertEquals("Room capacity was changed while changing service.", room.getCapacity(), 666l);
+        assertEquals("Room number was changed while changing service", room.getNumber(), 6l);
         assertEquals("Service was not changed.", room.getService(), false);
-        assertEquals("Room price was changed while changing service", room.getPrice(), BigDecimal.valueOf(100));
+        assertTrue("Room price was changed while changing capacity", room.getPrice().compareTo(BigDecimal.valueOf(100)) == 0);
 
         room.setPrice(BigDecimal.ZERO);
         manager.updateRoom(room);
         room = manager.getRoomByID(roomID);
 
-        assertEquals("Room capacity was changed while changing price.", room.getCapacity(), 5l);
-        assertEquals("Room number was changed while changing price", room.getNumber(), 21l);
-        assertEquals("Service was changed while changing price", room.getService(), true);
-        assertEquals("Room price was was not changed.", room.getPrice(), BigDecimal.ZERO);
+        assertEquals("Room capacity was changed while changing price.", room.getCapacity(), 666l);
+        assertEquals("Room number was changed while changing price", room.getNumber(), 6l);
+        assertEquals("Service was changed while changing price", room.getService(), false);
+        assertTrue("Room price was changed while changing capacity", room.getPrice().compareTo(BigDecimal.ZERO) == 0);
 
         assertDeepEquals(room2, manager.getRoomByID(room2.getID()));
     }
@@ -231,7 +233,7 @@ public class RoomManagerImplTest extends TestsCommon {
     private void assertDeepEquals(Room expected, Room result) {
         assertEquals("id value differs",expected.getID(), result.getID());
         assertEquals("capacity value differs",expected.getCapacity(), result.getCapacity());
-        assertEquals("price value differs",expected.getPrice(), result.getPrice());
+        assertTrue("price value differs",expected.getPrice().compareTo(result.getPrice()) == 0);
         assertEquals("service value differs",expected.getService(), result.getService());
         assertEquals("room number value differs",expected.getNumber(), result.getNumber());
     }
