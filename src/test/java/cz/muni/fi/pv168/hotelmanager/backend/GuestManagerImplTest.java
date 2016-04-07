@@ -22,7 +22,7 @@ public class GuestManagerImplTest extends TestsCommon {
     }
     
     @After
-    public void tearDown() throws DatabaseException {
+    public void tearDown() throws GuestManagerException {
     	dropTables(source);
     }
 
