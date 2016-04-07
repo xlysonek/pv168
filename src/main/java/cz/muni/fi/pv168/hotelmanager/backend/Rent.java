@@ -5,18 +5,18 @@ import java.time.LocalDate;
 public class Rent {
 	private Long id;
 	private LocalDate startDate;
-	private LocalDate endDate;
+	private LocalDate endDate; 
 	private Room room;
 	private Guest guest;
 
         /**
          * Empty constructor for Rent
          */
-        
+
         public Rent(){
-            
+
         }
-        
+
 	/**
 	 * Getter for rent id
 	 * @return
