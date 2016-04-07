@@ -52,8 +52,8 @@ public interface RoomManager {
      */
 
     public void deleteRoom(Room room);
-    
-    /**  
+
+    /**
      * Gets all currently empty rooms
      * @param startDate
      * @param endDate

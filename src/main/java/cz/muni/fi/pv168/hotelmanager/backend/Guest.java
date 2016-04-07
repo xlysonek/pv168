@@ -40,7 +40,7 @@ public class Guest {
 
 	public Guest() {
 	}
-	
+
 	public Guest(String name, String phone, String address) {
 		this.name = name;
 		this.phone = phone;

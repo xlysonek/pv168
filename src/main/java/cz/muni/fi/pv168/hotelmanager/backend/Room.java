@@ -25,7 +25,7 @@ public class Room {
      * @param price
      */
     public Room(Long number, int capacity, boolean service, BigDecimal price) {
-        this.number = number;     
+        this.number = number;
         this.capacity = capacity;
         this.service = service;
         this.price = price;

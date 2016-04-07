@@ -6,11 +6,11 @@ public class GuestManagerException extends DatabaseException {
 	public GuestManagerException(String msg) {
 		super(msg);
 	}
-	
+
 	public GuestManagerException(Throwable cause) {
 		super(cause);
 	}
-	
+
 	public GuestManagerException(String msg, Throwable cause) {
 		super(msg,cause);
 	}
