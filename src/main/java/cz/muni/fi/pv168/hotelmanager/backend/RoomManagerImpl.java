@@ -39,14 +39,14 @@ public class RoomManagerImpl implements RoomManager {
             
             int count = statement.executeUpdate();
             if (count != 1){
-                throw new RoomManagementException("");
+                throw new RoomManagerException("");
             }
             
             ResultSet key = statement.getGeneratedKeys();
             room.setID(getKey(key, room));
             
         }catch (SQLException ex){
-            throw new RoomManagementException("Room insertion was interupted by an error." + room + ex, ex);
+            throw new RoomManagerException("Room insertion was interupted by an error." + room + ex, ex);
         }
     }
 
@@ -63,7 +63,7 @@ public class RoomManagerImpl implements RoomManager {
                 Room room = resultSetToRoom(table);
                 
                 if (table.next()){
-                    throw new RoomManagementException("Internal error:" + 
+                    throw new RoomManagerException("Internal error:" + 
                             "More entities with the same id found" + id + 
                             File.separator + " Entities found:" + room + "," + resultSetToRoom(table));
                 }
@@ -75,7 +75,7 @@ public class RoomManagerImpl implements RoomManager {
                     
             
         } catch (SQLException ex) {
-            throw new RoomManagementException("There has been an error while retrieving "
+            throw new RoomManagerException("There has been an error while retrieving "
                     + "entity with given ID" + id, ex);
         }
     }
@@ -99,14 +99,14 @@ public class RoomManagerImpl implements RoomManager {
             
             int count = statement.executeUpdate();
             if (count == 0){
-                throw new RoomNotFoundException("Room" + room + "not found in database.");
+                throw new RoomManagerException("Room" + room + "not found in database.");
             } else if (count != 1){
-                throw new RoomManagementException("Invalid updated rows number " + count);
+                throw new RoomManagerException("Invalid updated rows number " + count);
             }
             
             
         } catch (SQLException ex) {
-            throw new RoomManagementException("There has been an error while updating a room "+ room, ex);
+            throw new RoomManagerException("There has been an error while updating a room "+ room, ex);
         }
         
     }
@@ -127,13 +127,13 @@ public class RoomManagerImpl implements RoomManager {
             
             int count = statement.executeUpdate();
             if (count == 0){
-                throw new RoomNotFoundException("Room doesnt exist in database" + room);
+                throw new RoomManagerException("Room doesnt exist in database" + room);
             } else if (count != 1){
-                throw new RoomManagementException("Invalid deleted number of rows" + count);
+                throw new RoomManagerException("Invalid deleted number of rows" + count);
             }
             
         } catch (SQLException ex) {
-            throw new RoomManagementException("There has been an error while deleting a room" + room, ex);
+            throw new RoomManagerException("There has been an error while deleting a room" + room, ex);
         }
         
     }
@@ -153,7 +153,7 @@ public class RoomManagerImpl implements RoomManager {
             return result;
             
         }catch (SQLException ex) {
-            throw new RoomManagementException(" There has been an error while getting all rooms"
+            throw new RoomManagerException(" There has been an error while getting all rooms"
                     + " with given number");
         }
     }
@@ -172,7 +172,7 @@ public class RoomManagerImpl implements RoomManager {
             return result;
             
         }catch (SQLException ex) {
-            throw new RoomManagementException(" There has been an error while getting all rooms");
+            throw new RoomManagerException(" There has been an error while getting all rooms");
         }
     }
     
@@ -230,19 +230,19 @@ public class RoomManagerImpl implements RoomManager {
     private long getKey(ResultSet key, Room room) throws SQLException {
         if (key.next()){
             if (key.getMetaData().getColumnCount() != 1){
-                throw new RoomManagementException("Internal error: Generated key" +
+                throw new RoomManagerException("Internal error: Generated key" +
                         " retrieving failed when trying to insert room" + room +
                         " - wrong key fields count: " + key.getMetaData().getColumnCount());
             }
             Long result = key.getLong(1);
             if (key.next()){
-                throw new RoomManagementException("Internal error: Generated key" + 
+                throw new RoomManagerException("Internal error: Generated key" + 
                         "retrieving failed when trying to insert room " + room + 
                         " - more keys found");
             }
             return result;
         }else{
-           throw new RoomManagementException("Internal error: Generated key " + 
+           throw new RoomManagerException("Internal error: Generated key " + 
                    "retrieving failed when trying to insert room" + room + 
                    " - no key"); 
         }

@@ -36,14 +36,14 @@ public class RentManagerImpl implements RentManager {
 
                 int addedRows = statement.executeUpdate();
                 if (addedRows != 1){
-                    throw new DatabaseException("Internal error: More rows (" + 
+                    throw new RentManagerException("Internal error: More rows (" + 
                             addedRows + ") inserted while trying to create new rent" + rent);
                 }
                 
                 ResultSet key = statement.getGeneratedKeys();
                 rent.setID(getKey(key, rent));
             } catch (SQLException ex) {
-                throw new DatabaseException("Error when creating rent" + rent, ex);
+                throw new RentManagerException("Error when creating rent" + rent, ex);
             }
             
 	}
@@ -60,7 +60,7 @@ public class RentManagerImpl implements RentManager {
                     Rent rent = resultSetToRent(resultSet);
                     
                     if (resultSet.next()){
-                        throw new DatabaseException("Internal Error: More entities with"
+                        throw new RentManagerException("Internal Error: More entities with"
                                 + "the same id: " + id + " found " + rent + ", " + resultSetToRent(resultSet));
                     }
                     return rent;
@@ -70,7 +70,7 @@ public class RentManagerImpl implements RentManager {
                 
                 
             } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving rent with the id " + id, ex);
+                throw new RentManagerException("Error when retrieving rent with the id " + id, ex);
             }
             
 	}
@@ -94,14 +94,14 @@ public class RentManagerImpl implements RentManager {
                 
                 int count = statement.executeUpdate();
                 if (count == 0){
-                    throw new DatabaseException("Rent " + rent + " not found.");
+                    throw new RentManagerException("Rent " + rent + " not found.");
                 }else if (count != 1){
-                    throw new DatabaseException("Invalid updated rows count detected "
+                    throw new RentManagerException("Invalid updated rows count detected "
                             + "(only one should have been updated)");
                 }
                 
             } catch (SQLException ex) {
-                throw new DatabaseException("Error when updating rent" + rent, ex);
+                throw new RentManagerException("Error when updating rent" + rent, ex);
             }
             
 	}
@@ -121,14 +121,14 @@ public class RentManagerImpl implements RentManager {
                     
                     int count = statement.executeUpdate();
                     if (count == 0){
-                        throw new DatabaseException("Rent " + rent + "was not found.");
+                        throw new RentManagerException("Rent " + rent + "was not found.");
                     }else if (count != 1){
-                        throw new DatabaseException("Invalid deleted rows in database "
+                        throw new RentManagerException("Invalid deleted rows in database "
                                 + "(only one should be updated)");
                     }
                     
                 }catch (SQLException ex){
-                    throw new DatabaseException("Error when deleting rent" + rent, ex);
+                    throw new RentManagerException("Error when deleting rent" + rent, ex);
                 }
 	}
 
@@ -152,7 +152,7 @@ public class RentManagerImpl implements RentManager {
                     }
                     return result;
                 } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving list of rents by guest id", ex);
+                throw new RentManagerException("Error when retrieving list of rents by guest id", ex);
             }
 	}
 
@@ -189,7 +189,7 @@ public class RentManagerImpl implements RentManager {
                     }
                     return result;
                 } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving list of rents by guest id" + 
+                throw new RentManagerException("Error when retrieving list of rents by guest id" + 
                         guestId + " and date " + startDate + " - " + endDate, ex);
             }
 	}
@@ -214,7 +214,7 @@ public class RentManagerImpl implements RentManager {
                     }
                     return result;
                 } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving list of rents by room id" + 
+                throw new RentManagerException("Error when retrieving list of rents by room id" + 
                         roomId, ex);
             }
 	}
@@ -253,7 +253,7 @@ public class RentManagerImpl implements RentManager {
                     }
                     return result;
                 } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving list of rents by room id" + 
+                throw new RentManagerException("Error when retrieving list of rents by room id" + 
                         roomId + " and date " + startDate + " - " + endDate, ex);
             }
 	}
@@ -287,7 +287,7 @@ public class RentManagerImpl implements RentManager {
                     }
                     return result;
                 } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving list of rents by date", ex);
+                throw new RentManagerException("Error when retrieving list of rents by date", ex);
             }
 	}
 
@@ -305,7 +305,7 @@ public class RentManagerImpl implements RentManager {
                     }
                     return result;
                 } catch (SQLException ex) {
-                throw new DatabaseException("Error when retrieving list of all rents", ex);
+                throw new RentManagerException("Error when retrieving list of all rents", ex);
             }
 	}
 
@@ -335,19 +335,19 @@ public class RentManagerImpl implements RentManager {
         public Long getKey(ResultSet key, Rent rent) throws SQLException, DatabaseException{
             if (key.next()){
                 if (key.getMetaData().getColumnCount() != 1){
-                    throw new DatabaseException("Internal Error: Generated key"
+                    throw new RentManagerException("Internal Error: Generated key"
                     + " retrieve failed when trying to insert rent " + rent 
                             + " wrong key fields count" + key.getMetaData().getColumnCount());
                 }
                 Long result = key.getLong(1);
                 if (key.next()){
-                    throw new DatabaseException("Internal Error: Generated key"
+                    throw new RentManagerException("Internal Error: Generated key"
                     + "retrival failed when trying to insert rent" + rent 
                             + " more keys found");
                 }
                 return result;
             }else {
-                throw new DatabaseException("Internal Error: Generated key" 
+                throw new RentManagerException("Internal Error: Generated key" 
                         + "retrieval failed when trying to insert rent" + rent
                         + " no key found.");
             }

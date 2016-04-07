@@ -9,14 +9,12 @@ package cz.muni.fi.pv168.hotelmanager.backend;
  *
  * @author Matlafous
  */
-public class RoomManagementException extends RuntimeException{
-    
-    public RoomManagementException(String message){
+public class RentManagerException extends DatabaseException{
+    public RentManagerException(String message){
         super(message);
     }
     
-    public RoomManagementException(String message, Throwable cause){
-        super(message);
+    public RentManagerException(String message, Throwable cause){
+        super(message, cause);
     }
-    
 }
