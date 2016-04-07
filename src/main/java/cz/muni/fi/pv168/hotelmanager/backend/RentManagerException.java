@@ -14,6 +14,10 @@ public class RentManagerException extends DatabaseException{
         super(message);
     }
     
+    public RentManagerException(Throwable cause){
+        super(cause);
+    }
+    
     public RentManagerException(String message, Throwable cause){
         super(message, cause);
     }

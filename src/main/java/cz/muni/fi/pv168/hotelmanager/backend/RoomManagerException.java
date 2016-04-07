@@ -15,6 +15,10 @@ public class RoomManagerException extends DatabaseException{
         super(message);
     }
     
+     public RoomManagerException(Throwable cause){
+        super(cause);
+    }
+    
     public RoomManagerException(String message, Throwable cause){
         super(message);
     }
