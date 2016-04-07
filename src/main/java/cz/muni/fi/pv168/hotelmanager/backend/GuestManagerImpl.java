@@ -33,7 +33,7 @@ public class GuestManagerImpl implements GuestManager {
 
 			int n = st.executeUpdate();
 			if (n != 1) {
-				throw new DatabaseException("Wrong number of added rows (" + n
+				throw new GuestManagerException("Wrong number of added rows (" + n
 				                            + ") for guest: " + guest);
 			}
 
@@ -42,7 +42,7 @@ public class GuestManagerImpl implements GuestManager {
 			guest.setID(keys.getLong(1));
 		}
 		catch (SQLException e) {
-			throw new DatabaseException("Failed to insert guest into database", e);
+			throw new GuestManagerException("Failed to insert guest into database", e);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class GuestManagerImpl implements GuestManager {
 			if (set.next()) {
 				Guest guest = resultSetToGuest(set);
 				if (set.next()) {
-					throw new DatabaseException("More than one guest with id " + id + " found");
+					throw new GuestManagerException("More than one guest with id " + id + " found");
 				}
 				return guest;
 			} else {
@@ -68,7 +68,7 @@ public class GuestManagerImpl implements GuestManager {
 			}
 		}
 		catch (SQLException e) {
-			throw new DatabaseException("Failed to get guest with id " + id, e);
+			throw new GuestManagerException("Failed to get guest with id " + id, e);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class GuestManagerImpl implements GuestManager {
 			return ret;
 		}
 		catch (SQLException e) {
-			throw new DatabaseException("Failed to get all guests", e);
+			throw new GuestManagerException("Failed to get all guests", e);
 		}
 	}
 
@@ -115,14 +115,14 @@ public class GuestManagerImpl implements GuestManager {
 
 			int n = st.executeUpdate();
 			if (n == 0) {
-				throw new DatabaseException("Guest with id " + guest.getID() + " was not found in database");
+				throw new GuestManagerException("Guest with id " + guest.getID() + " was not found in database");
 			}
 			else if (n != 1) {
-				throw new DatabaseException("Wrong number of updated rows: " + n);
+				throw new GuestManagerException("Wrong number of updated rows: " + n);
 			}
 		}
 		catch (SQLException e) {
-			throw new DatabaseException("Failed to update guest: " + guest, e);
+			throw new GuestManagerException("Failed to update guest: " + guest, e);
 		}
 	}
 
@@ -139,14 +139,14 @@ public class GuestManagerImpl implements GuestManager {
 			st.setLong(1, guest.getID());
 			int n = st.executeUpdate();
 			if (n == 0) {
-				throw new DatabaseException("Guest with id " + guest.getID() + " was not found in database");
+				throw new GuestManagerException("Guest with id " + guest.getID() + " was not found in database");
 			}
 			else if (n != 1) {
-				throw new DatabaseException("Oops, more than one row deleted. Guest id: " + guest.getID());
+				throw new GuestManagerException("Oops, more than one row deleted. Guest id: " + guest.getID());
 			}
 		}
 		catch (SQLException e) {
-			throw new DatabaseException("Failed to delete guest with id " + guest.getID(), e);
+			throw new GuestManagerException("Failed to delete guest with id " + guest.getID(), e);
 		}
 	}
 
