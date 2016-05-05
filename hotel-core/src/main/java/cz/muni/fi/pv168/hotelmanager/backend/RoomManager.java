@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -59,5 +60,25 @@ public interface RoomManager {
      * @param endDate
      * @return
      */
-	public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate);
+
+    public List<Room> getFreeRooms(LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Gets all rooms that have price under given number and capacity above given value.
+     * Also gets only the ones with service
+     * @param capacity
+     * @param price
+     * @return
+     */
+
+    public List<Room> getRoomByAttributesWService(int capacity, BigDecimal price);
+
+    /**
+     * Gets all rooms that have price under given value and capacity above given value.
+     * @param capacity
+     * @param price
+     * @return
+     */
+
+    public List<Room> getRoomByAttributes(int capacity, BigDecimal price);
 }

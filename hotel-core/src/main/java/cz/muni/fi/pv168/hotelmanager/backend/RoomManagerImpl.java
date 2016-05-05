@@ -1,6 +1,7 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -141,7 +142,8 @@ public class RoomManagerImpl implements RoomManager {
     @Override
     public List<Room> getRoomByNumber(Long number) {
         try( Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement("SELECT id, number, capacity, service, price FROM room WHERE number = ?")){
+                PreparedStatement statement = connection.prepareStatement("SELECT id, number, "
+                        + "capacity, service, price FROM room WHERE number = ?")){
 
         	statement.setLong(1, number);
             ResultSet table = statement.executeQuery();
@@ -208,7 +210,7 @@ public class RoomManagerImpl implements RoomManager {
                 return result;
             } catch (SQLException ex) {
             throw new DatabaseException("Error when retrieving list of rents by date: " + ex, ex);
-        }
+            }
     }
 
     private void validate(Room room) throws IllegalArgumentException {
@@ -256,6 +258,53 @@ public class RoomManagerImpl implements RoomManager {
         room.setService(table.getBoolean("service"));
         room.setPrice(table.getBigDecimal("price"));
         return room;
+    }
+
+    @Override
+    public List<Room> getRoomByAttributesWService(int capacity, BigDecimal price) {
+
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT id, number, capacity, service, price FROM room "
+                 + "WHERE capacity > ? AND service = ? AND price < ? ")) {
+
+            statement.setInt(1, capacity);
+            statement.setBoolean(2, true);
+            statement.setBigDecimal(3, price);
+
+            ResultSet resultSet = statement.executeQuery();
+            List<Room> result = new ArrayList<>();
+
+            while(resultSet.next()){
+                result.add(resultSetToRoom(resultSet));
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new DatabaseException("Error when retrieving list of rents by date: " + ex, ex);
+        }
+    }
+
+    @Override
+    public List<Room> getRoomByAttributes(int capacity, BigDecimal price) {
+
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT id, number, capacity, service, price FROM room "
+                 + "WHERE capacity > ? AND price < ? ")) {
+
+            statement.setInt(1, capacity);
+            statement.setBigDecimal(2, price);
+
+            ResultSet resultSet = statement.executeQuery();
+            List<Room> result = new ArrayList<>();
+
+            while(resultSet.next()){
+                result.add(resultSetToRoom(resultSet));
+            }
+            return result;
+        } catch (SQLException ex) {
+            throw new DatabaseException("Error when retrieving list of rents by date: " + ex, ex);
+        }
     }
 
 }
