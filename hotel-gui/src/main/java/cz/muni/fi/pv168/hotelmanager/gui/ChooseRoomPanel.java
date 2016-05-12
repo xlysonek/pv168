@@ -5,17 +5,66 @@
  */
 package cz.muni.fi.pv168.hotelmanager.gui;
 
+import cz.muni.fi.pv168.hotelmanager.backend.Room;
+import cz.muni.fi.pv168.hotelmanager.backend.RoomManager;
+import cz.muni.fi.pv168.hotelmanager.backend.RoomManagerImpl;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import javax.sql.DataSource;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author xlysonek
  */
-public class ChooseRoomDialog extends javax.swing.JPanel {
+public class ChooseRoomPanel extends javax.swing.JPanel {
 
     /**
-     * Creates new form ChooseRoomDialog
+     * Creates new form ChooseRoomPanel
      */
-    public ChooseRoomDialog() {
+    public ChooseRoomPanel() {
         initComponents();
+        this.source = source;
+        loadRooms();
+    }
+
+    ChooseRoomPanel(DataSource source) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void loadRooms() {
+        class LoadRoomsWorker extends SwingWorker<List<Room>,Void> {
+            @Override
+            public List<Room> doInBackground() {
+                RoomManager m = new RoomManagerImpl(source);
+                return m.getAllRooms();
+            }
+
+            @Override
+            public void done() {
+                try {
+                    List<Room> l = get();
+                    loadRooms(l);
+
+                }
+                catch (ExecutionException e) {
+
+                }
+                catch (InterruptedException e) {
+                    // can't happen
+                }
+            }
+        }
+        LoadRoomsWorker worker = new LoadRoomsWorker();
+        worker.execute();
+    }
+
+    private void loadRooms(List<Room> list) {
+        RoomsTableModel model = (RoomsTableModel) tblRooms.getModel();
+        model.deleteAll();
+        for (Room r : list) {
+            model.addRoom(r);
+        }
     }
 
     /**
@@ -27,77 +76,51 @@ public class ChooseRoomDialog extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
-        txtRoomNumber = new javax.swing.JTextField();
-        checkServiceOnly = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
-        txtCapacity = new javax.swing.JTextField();
-        radioFree = new javax.swing.JRadioButton();
-        btnSearch = new javax.swing.JButton();
-        btnChoose = new javax.swing.JButton();
-        radioAnyStatus = new javax.swing.JRadioButton();
-        comboDaySince = new javax.swing.JComboBox<>();
-        comboMonthSince = new javax.swing.JComboBox<>();
-        spinnerYearSince = new javax.swing.JSpinner();
         comboDayUntil = new javax.swing.JComboBox<>();
+        checkServiceOnly = new javax.swing.JCheckBox();
         comboMonthUntil = new javax.swing.JComboBox<>();
         spinnerYearUntil = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         spinnerMaxPrice = new javax.swing.JSpinner();
+        jLabel2 = new javax.swing.JLabel();
+        spinnerRoomNumber = new javax.swing.JSpinner();
+        radioFree = new javax.swing.JRadioButton();
+        spinnerCapacity = new javax.swing.JSpinner();
+        btnSearch = new javax.swing.JButton();
+        radioAnyStatus = new javax.swing.JRadioButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRooms = new javax.swing.JTable();
+        comboDaySince = new javax.swing.JComboBox<>();
+        comboMonthSince = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
+        spinnerYearSince = new javax.swing.JSpinner();
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Number", "Service", "Capacity", "Price"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, true, true, true
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable1);
-
-        jLabel1.setText("Number:");
+        comboDayUntil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         checkServiceOnly.setText("With service only");
 
-        jLabel2.setText("Capacity:");
+        comboMonthUntil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        jLabel4.setText("Maximum price:");
+
+        jLabel2.setText("Minimum capacity");
 
         radioFree.setText("Free in date range");
 
         btnSearch.setText("Search");
 
-        btnChoose.setText("Choose");
-
         radioAnyStatus.setText("Any status");
+
+        tblRooms.setModel(new RoomsTableModel());
+        tblRooms.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblRooms.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tblRooms);
 
         comboDaySince.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         comboMonthSince.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        comboDayUntil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        comboMonthUntil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel4.setText("Maximum price:");
+        jLabel1.setText("Number:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -111,16 +134,11 @@ public class ChooseRoomDialog extends javax.swing.JPanel {
                     .addComponent(jLabel1)
                     .addComponent(checkServiceOnly)
                     .addComponent(jLabel2)
-                    .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(radioFree)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(radioAnyStatus))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnSearch)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnChoose))
+                    .addComponent(btnSearch)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -138,24 +156,27 @@ public class ChooseRoomDialog extends javax.swing.JPanel {
                                 .addComponent(spinnerYearSince, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(spinnerMaxPrice, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(27, Short.MAX_VALUE))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(spinnerRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnerCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spinnerRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(checkServiceOnly)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spinnerCapacity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(radioFree)
@@ -174,18 +195,27 @@ public class ChooseRoomDialog extends javax.swing.JPanel {
                         .addComponent(jLabel4)
                         .addGap(5, 5, 5)
                         .addComponent(spinnerMaxPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnSearch)
-                            .addComponent(btnChoose)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(20, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSearch)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    public Room getRoom() {
+        int row = tblRooms.getSelectedRow();
+        if (row < 0) {
+            return null;
+        }
+        else {
+            RoomsTableModel model = (RoomsTableModel) tblRooms.getModel();
+            return model.getRow(row);
+        }
+    }
+
+    private DataSource source;
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnChoose;
     private javax.swing.JButton btnSearch;
     private javax.swing.JCheckBox checkServiceOnly;
     private javax.swing.JComboBox<String> comboDaySince;
@@ -196,13 +226,13 @@ public class ChooseRoomDialog extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JRadioButton radioAnyStatus;
     private javax.swing.JRadioButton radioFree;
+    private javax.swing.JSpinner spinnerCapacity;
     private javax.swing.JSpinner spinnerMaxPrice;
+    private javax.swing.JSpinner spinnerRoomNumber;
     private javax.swing.JSpinner spinnerYearSince;
     private javax.swing.JSpinner spinnerYearUntil;
-    private javax.swing.JTextField txtCapacity;
-    private javax.swing.JTextField txtRoomNumber;
+    private javax.swing.JTable tblRooms;
     // End of variables declaration//GEN-END:variables
 }

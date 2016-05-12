@@ -12,4 +12,6 @@ public interface GuestManager {
 	public void updateGuest(Guest guest);
 
 	public void deleteGuest(Guest guest);
+
+        public List<Guest> getGuestByName(String name);
 }

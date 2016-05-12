@@ -72,6 +72,28 @@ public class GuestManagerImpl implements GuestManager {
 		}
 	}
 
+        public List<Guest> getGuestByName(String name) {
+            if (name == null) {
+                throw new IllegalArgumentException("name is null");
+            }
+            try (Connection conn = dataSource.getConnection();
+                 PreparedStatement st = conn.prepareStatement(
+                        "SELECT * FROM guest WHERE name LIKE ?")
+                ) {
+                    st.setString(1, "%" + name + "%");
+                    ResultSet set = st.executeQuery();
+                    List<Guest> res = new ArrayList();
+                    while (set.next()) {
+                        Guest guest = resultSetToGuest(set);
+                        res.add(guest);
+                    }
+                    return res;
+            }
+            catch (SQLException e) {
+                throw new GuestManagerException("Failed to get guest with name " + name, e);
+            }
+        }
+
 	private Guest resultSetToGuest(ResultSet set) throws SQLException {
 		Guest guest = new Guest();
 		guest.setID(set.getLong("id"));

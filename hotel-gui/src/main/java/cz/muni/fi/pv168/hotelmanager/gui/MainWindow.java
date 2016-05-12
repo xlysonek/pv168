@@ -5,17 +5,44 @@
  */
 package cz.muni.fi.pv168.hotelmanager.gui;
 
+import cz.muni.fi.pv168.hotelmanager.backend.DatabaseCommons;
+import cz.muni.fi.pv168.hotelmanager.backend.Guest;
+import cz.muni.fi.pv168.hotelmanager.backend.GuestManager;
+import cz.muni.fi.pv168.hotelmanager.backend.GuestManagerImpl;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import javax.sql.DataSource;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author Matlafous
  */
 public class MainWindow extends javax.swing.JFrame {
+    private DataSource source;
 
     /**
      * Creates new form MainWindow
      */
-    public MainWindow() {
+    public MainWindow(DataSource source) {
         initComponents();
+        this.source = source;
+        loadGuests();
+    }
+
+    private void loadGuests() {
+        GuestManager m = new GuestManagerImpl(source);
+        List<Guest> l = m.getAllGuests();
+        loadGuests(l);
+    }
+
+    private void loadGuests(List<Guest> list) {
+        GuestsTableModel model = (GuestsTableModel) tblGuests.getModel();
+        model.deleteAll();
+        for (Guest g : list) {
+            model.addGuest(g);
+        }
     }
 
     /**
@@ -26,7 +53,6 @@ public class MainWindow extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel4 = new javax.swing.JPanel();
@@ -43,18 +69,16 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
-        jButton12 = new javax.swing.JButton();
-        jButton13 = new javax.swing.JButton();
-        jButton14 = new javax.swing.JButton();
+        btnAddRent = new javax.swing.JButton();
+        btnEditRent = new javax.swing.JButton();
+        btnDeleteRent = new javax.swing.JButton();
         jButton15 = new javax.swing.JButton();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
         jSeparator3 = new javax.swing.JSeparator();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tblRents = new javax.swing.JTable();
         jLabel10 = new javax.swing.JLabel();
         jButton16 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
@@ -76,51 +100,40 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, jTabbedPane2, org.jdesktop.beansbinding.ELProperty.create("${}"), jTabbedPane2, org.jdesktop.beansbinding.BeanProperty.create("background"));
-        bindingGroup.addBinding(binding);
-
         btnAddGuest.setText("Add new Guest");
+        btnAddGuest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddGuestActionPerformed(evt);
+            }
+        });
 
         btnEditGuest.setText("Edit Guest");
+        btnEditGuest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditGuestActionPerformed(evt);
+            }
+        });
 
         btnDeleteGuest.setText("Delete Guest");
+        btnDeleteGuest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteGuestActionPerformed(evt);
+            }
+        });
 
         btnSearch.setText("search");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Guest name");
 
-        tblGuests.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Guest ID", "Guest name", "Adress", "Phone number"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        tblGuests.setModel(new GuestsTableModel());
+        tblGuests.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblGuests.getTableHeader().setReorderingAllowed(false);
         jScrollPane4.setViewportView(tblGuests);
-        if (tblGuests.getColumnModel().getColumnCount() > 0) {
-            tblGuests.getColumnModel().getColumn(0).setResizable(false);
-            tblGuests.getColumnModel().getColumn(1).setResizable(false);
-            tblGuests.getColumnModel().getColumn(2).setResizable(false);
-            tblGuests.getColumnModel().getColumn(3).setResizable(false);
-        }
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -182,19 +195,18 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Guests", jPanel4);
 
-        jButton12.setText("Add new Rent");
-
-        jButton13.setText("Edit Rent");
-
-        jButton14.setText("Delete Rent");
-
-        jButton15.setText("search");
-
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        btnAddRent.setText("Add new Rent");
+        btnAddRent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                btnAddRentActionPerformed(evt);
             }
         });
+
+        btnEditRent.setText("Edit Rent");
+
+        btnDeleteRent.setText("Delete Rent");
+
+        jButton15.setText("search");
 
         jLabel7.setText("From Date");
 
@@ -202,7 +214,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel9.setText("Room");
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tblRents.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -227,13 +239,13 @@ public class MainWindow extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane5.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setResizable(false);
-            jTable3.getColumnModel().getColumn(1).setResizable(false);
-            jTable3.getColumnModel().getColumn(2).setResizable(false);
-            jTable3.getColumnModel().getColumn(3).setResizable(false);
-            jTable3.getColumnModel().getColumn(4).setResizable(false);
+        jScrollPane5.setViewportView(tblRents);
+        if (tblRents.getColumnModel().getColumnCount() > 0) {
+            tblRents.getColumnModel().getColumn(0).setResizable(false);
+            tblRents.getColumnModel().getColumn(1).setResizable(false);
+            tblRents.getColumnModel().getColumn(2).setResizable(false);
+            tblRents.getColumnModel().getColumn(3).setResizable(false);
+            tblRents.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jLabel10.setText("Guest");
@@ -251,59 +263,54 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jButton15, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField8, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
+                        .addComponent(jLabel9)
+                        .addGap(131, 143, Short.MAX_VALUE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jButton16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addGap(99, 99, 99)))
-                .addContainerGap())
+                            .addComponent(btnEditRent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDeleteRent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAddRent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel7Layout.createSequentialGroup()
+                                        .addComponent(jLabel7)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jButton15)
+                                    .addComponent(jLabel10))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddRent, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton13)
+                .addComponent(btnEditRent)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton14)
+                .addComponent(btnDeleteRent)
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel9)
-                .addGap(3, 3, 3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton16)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton17)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton15)
-                .addContainerGap(97, Short.MAX_VALUE))
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -327,7 +334,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 730, Short.MAX_VALUE)
+            .addGap(0, 734, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -339,9 +346,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGap(0, 415, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addGap(0, 9, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGap(0, 9, Short.MAX_VALUE)))
         );
 
         jTabbedPane2.addTab("Rents", jPanel2);
@@ -475,18 +482,165 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(jTabbedPane2)
         );
 
-        bindingGroup.bind();
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void btnAddGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddGuestActionPerformed
+        GuestsTableModel model = (GuestsTableModel) tblGuests.getModel();
+        setGuestEditorValues(null);
+        int res = JOptionPane.showConfirmDialog(null, guestEditorPanel, "Add guest", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (res == JOptionPane.OK_OPTION) {
+            Guest g = getGuestFromEditor();
+
+            class GuestAddSwingWorker extends SwingWorker<Void,Void> {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    GuestManager manager = new GuestManagerImpl(source);
+                    manager.createGuest(g);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    model.addGuest(g);
+                }
+            }
+
+            GuestAddSwingWorker worker = new GuestAddSwingWorker();
+            worker.execute();
+        }
+    }//GEN-LAST:event_btnAddGuestActionPerformed
+
+    private void btnDeleteGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteGuestActionPerformed
+        int row = tblGuests.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "No guest selected.");
+        }
+        else {
+            GuestsTableModel model = (GuestsTableModel) tblGuests.getModel();
+            class GuestDeleteSwingWorker extends SwingWorker<Void,Void> {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    GuestManager manager = new GuestManagerImpl(source);
+                    manager.deleteGuest(model.getRow(row));
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    model.deleteGuest(row);
+                }
+            }
+            GuestDeleteSwingWorker worker = new GuestDeleteSwingWorker();
+            worker.execute();
+        }
+    }//GEN-LAST:event_btnDeleteGuestActionPerformed
+
+    private void btnEditGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditGuestActionPerformed
+        int row = tblGuests.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "No guest selected.");
+        }
+        else {
+            GuestsTableModel model = (GuestsTableModel) tblGuests.getModel();
+            Guest g = model.getRow(row);
+            setGuestEditorValues(g);
+            int res = JOptionPane.showConfirmDialog(null, guestEditorPanel,
+                    "Edit guest", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+            if (res == JOptionPane.OK_OPTION) {
+                Guest newGuest = getGuestFromEditor();
+                newGuest.setID(g.getID());
+
+                class GuestEditSwingWorker extends SwingWorker<Void,Void> {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        GuestManager manager = new GuestManagerImpl(source);
+                        manager.updateGuest(newGuest);
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        model.editGuest(newGuest, row);
+                    }
+                }
+
+                GuestEditSwingWorker worker = new GuestEditSwingWorker();
+                worker.execute();
+            }
+        }
+    }//GEN-LAST:event_btnEditGuestActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String name = txtName.getText();
+        class GuestSearchSwingWorker extends SwingWorker<List<Guest>,Void> {
+            @Override
+            protected List<Guest> doInBackground() throws Exception {
+                GuestManager m = new GuestManagerImpl(source);
+                List<Guest> res = m.getGuestByName(name);
+                return res;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    loadGuests(get());
+                }
+                catch (ExecutionException e) {
+
+                }
+                catch (InterruptedException e) {
+                    // can't happen
+                }
+            }
+        }
+        GuestSearchSwingWorker worker = new GuestSearchSwingWorker();
+        worker.execute();
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnAddRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRentActionPerformed
+        int res = JOptionPane.showConfirmDialog(null, rentEditorPanel,
+                "Add guest", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+        if (res == JOptionPane.OK_OPTION) {
+            
+        }
+    }//GEN-LAST:event_btnAddRentActionPerformed
+
+    private Guest getGuestFromEditor() {
+        return new Guest(guestEditorPanel.getNameValue(),
+                         guestEditorPanel.getPhoneValue(),
+                         guestEditorPanel.getAddressValue());
+    }
+
+    private void setGuestEditorValues(Guest g) {
+        String name, address, phone;
+        if (g == null) {
+            name = address = phone = "";
+        }
+        else {
+            name = g.getName();
+            address = g.getAddress();
+            phone = g.getPhone();
+            if (name == null) {
+                name = "";
+            }
+            if (address == null) {
+                address = "";
+            }
+            if (phone == null) {
+                phone = "";
+            }
+        }
+        guestEditorPanel.setNameValue(name);
+        guestEditorPanel.setAddressValue(address);
+        guestEditorPanel.setPhoneValue(phone);
+    }
 
     /**
      * @param args the command line arguments
@@ -519,22 +673,27 @@ public class MainWindow extends javax.swing.JFrame {
         }
         //</editor-fold>
 
+        DataSource source = DatabaseCommons.getDataSource();
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new MainWindow().setVisible(true);
+                new MainWindow(source).setVisible(true);
             }
         });
     }
 
+    private final GuestEditorPanel guestEditorPanel = new GuestEditorPanel();
+    private final RentEditorPanel rentEditorPanel = new RentEditorPanel(source);
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddGuest;
+    private javax.swing.JButton btnAddRent;
     private javax.swing.JButton btnDeleteGuest;
+    private javax.swing.JButton btnDeleteRent;
     private javax.swing.JButton btnEditGuest;
+    private javax.swing.JButton btnEditRent;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
-    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
@@ -565,14 +724,11 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTable tblGuests;
+    private javax.swing.JTable tblRents;
     private javax.swing.JTextField txtName;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
