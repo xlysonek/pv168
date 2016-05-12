@@ -412,6 +412,8 @@ public class MainWindow extends javax.swing.JFrame {
         tblRooms.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblRooms);
 
+        numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
+
         jLabel5.setText("Service");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -788,7 +790,7 @@ public class MainWindow extends javax.swing.JFrame {
             number = 0l;
             capacity = 0;
             service = false;
-            price = BigDecimal.valueOf(0l);
+            price = BigDecimal.ZERO;
         }else{
             number = room.getNumber();
             capacity = room.getCapacity();

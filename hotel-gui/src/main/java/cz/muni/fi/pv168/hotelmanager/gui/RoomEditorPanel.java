@@ -21,7 +21,7 @@ public class RoomEditorPanel extends javax.swing.JPanel {
     }
 
     public Long getNumberValue(){
-        return (Long) numberValue.getValue();
+        return (long) numberValue.getValue();
     }
 
     public int getCapacityValue(){
@@ -33,7 +33,12 @@ public class RoomEditorPanel extends javax.swing.JPanel {
     }
 
     public BigDecimal getPriceValue(){
-        return BigDecimal.valueOf((long) priceValue.getValue());
+        if (priceValue.getValue() == BigDecimal.ZERO){
+            return (BigDecimal) priceValue.getValue();
+        }else{
+            return new BigDecimal( (int) priceValue.getValue());
+        }
+
     }
 
     public void setNumberValue(Long number){
@@ -77,6 +82,11 @@ public class RoomEditorPanel extends javax.swing.JPanel {
         jLabel3.setText("Price:");
 
         jLabel4.setText("Capacity:");
+
+        numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
+        numberValue.setName(""); // NOI18N
+
+        priceValue.setModel(new javax.swing.SpinnerNumberModel());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
