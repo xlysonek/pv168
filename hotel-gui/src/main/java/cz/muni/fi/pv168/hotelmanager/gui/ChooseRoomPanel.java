@@ -22,14 +22,10 @@ public class ChooseRoomPanel extends javax.swing.JPanel {
     /**
      * Creates new form ChooseRoomPanel
      */
-    public ChooseRoomPanel() {
+    public ChooseRoomPanel(DataSource source) {
         initComponents();
         this.source = source;
         loadRooms();
-    }
-
-    ChooseRoomPanel(DataSource source) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void loadRooms() {
