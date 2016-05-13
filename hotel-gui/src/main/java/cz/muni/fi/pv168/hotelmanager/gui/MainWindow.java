@@ -12,8 +12,11 @@ import cz.muni.fi.pv168.hotelmanager.backend.GuestManagerImpl;
 import cz.muni.fi.pv168.hotelmanager.backend.Rent;
 import cz.muni.fi.pv168.hotelmanager.backend.RentManager;
 import cz.muni.fi.pv168.hotelmanager.backend.RentManagerImpl;
-import cz.muni.fi.pv168.hotelmanager.backend.Room;
 import java.time.LocalDate;
+import cz.muni.fi.pv168.hotelmanager.backend.Room;
+import cz.muni.fi.pv168.hotelmanager.backend.RoomManager;
+import cz.muni.fi.pv168.hotelmanager.backend.RoomManagerImpl;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.sql.DataSource;
@@ -31,10 +34,10 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow(DataSource source) {
         this.source = source;
-        this.guestEditorPanel = new GuestEditorPanel();
         this.rentEditorPanel = new RentEditorPanel(source);
         initComponents();
         loadGuests();
+        loadRooms();
     }
 
     private void loadGuests() {
@@ -48,6 +51,20 @@ public class MainWindow extends javax.swing.JFrame {
         model.deleteAll();
         for (Guest g : list) {
             model.addGuest(g);
+        }
+    }
+
+    private void loadRooms(){
+        RoomManager manager = new RoomManagerImpl(source);
+        List<Room> roomsList = manager.getAllRooms();
+        loadRooms(roomsList);
+    }
+
+    private void loadRooms(List<Room> list){
+        RoomsTableModel table = (RoomsTableModel) tblRooms.getModel();
+        table.deleteAll();
+        for (Room room : list){
+            table.addRoom(room);
         }
     }
 
@@ -89,20 +106,21 @@ public class MainWindow extends javax.swing.JFrame {
         jButton16 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        addRoom = new javax.swing.JButton();
+        editRoom = new javax.swing.JButton();
+        deleteRoom = new javax.swing.JButton();
+        serachRoom = new javax.swing.JButton();
+        serviceValue = new javax.swing.JCheckBox();
         jSeparator1 = new javax.swing.JSeparator();
-        jTextField3 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblRooms = new javax.swing.JTable();
+        numberValue = new javax.swing.JSpinner();
+        capacityValue = new javax.swing.JSpinner();
+        priceValue = new javax.swing.JSpinner();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -359,19 +377,31 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Rents", jPanel2);
 
-        jButton4.setText("Add new Room");
-
-        jButton5.setText("Edit Room");
-
-        jButton6.setText("Delete Room");
-
-        jButton7.setText("search");
-
-        jCheckBox1.setText("Service");
-
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        addRoom.setText("Add new Room");
+        addRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                addRoomActionPerformed(evt);
+            }
+        });
+
+        editRoom.setText("Edit Room");
+        editRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editRoomActionPerformed(evt);
+            }
+        });
+
+        deleteRoom.setText("Delete Room");
+        deleteRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteRoomActionPerformed(evt);
+            }
+        });
+
+        serachRoom.setText("search");
+        serachRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serachRoomActionPerformed(evt);
             }
         });
 
@@ -381,39 +411,14 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel3.setText("Maximum price");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Room ID", "Room number", "Capacity", "Service", "Price"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Long.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class, java.lang.Object.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
+        tblRooms.setModel(new RoomsTableModel());
+        tblRooms.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tblRooms.getTableHeader().setReorderingAllowed(false);
+        jScrollPane3.setViewportView(tblRooms);
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
+        numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-            jTable1.getColumnModel().getColumn(4).setResizable(false);
-        }
+        jLabel5.setText("Service");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -424,21 +429,24 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(jTextField1)
-                    .addComponent(jTextField3)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField2)
+                    .addComponent(editRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                    .addComponent(addRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
+                    .addComponent(numberValue)
+                    .addComponent(capacityValue)
+                    .addComponent(priceValue)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jButton7)
+                            .addComponent(serachRoom)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 60, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(serviceValue)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -447,31 +455,33 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton4)
+                        .addComponent(addRoom)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton5)
+                        .addComponent(editRoom)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6)
+                        .addComponent(deleteRoom)
                         .addGap(18, 18, 18)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(numberValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(capacityValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(priceValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jCheckBox1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton7)
-                        .addGap(0, 86, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(serviceValue)
+                            .addComponent(jLabel5))
+                        .addGap(7, 7, 7)
+                        .addComponent(serachRoom)
+                        .addGap(0, 134, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -490,10 +500,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnAddGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddGuestActionPerformed
         GuestsTableModel model = (GuestsTableModel) tblGuests.getModel();
@@ -669,10 +675,141 @@ public class MainWindow extends javax.swing.JFrame {
                         rentEditorPanel.getGuest());
     }
 
+    private void addRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomActionPerformed
+        RoomsTableModel model = (RoomsTableModel) tblRooms.getModel();
+        setRoomEditorValues(null);
+        int res = JOptionPane.showConfirmDialog(null, roomEditorPanel, "add_room",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (res == JOptionPane.OK_OPTION){
+            Room room = getRoomFromEditor();
+            class RoomAddSwingWorker extends SwingWorker<Void, Void>{
+                @Override
+                protected Void doInBackground() throws Exception {
+                    RoomManager manager = new RoomManagerImpl(source);
+                    manager.createRoom(room);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    model.addRoom(room);
+                }
+            }
+            RoomAddSwingWorker worker = new RoomAddSwingWorker();
+            worker.execute();
+        }
+    }//GEN-LAST:event_addRoomActionPerformed
+
+    private void deleteRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRoomActionPerformed
+        int row = tblRooms.getSelectedRow();
+        if (row < 0){
+            JOptionPane.showMessageDialog(null, "No room selected.");
+        }else{
+            RoomsTableModel model = (RoomsTableModel) tblRooms.getModel();
+            class RoomDeleteSwingWorker extends SwingWorker<Void, Void>{
+                @Override
+                protected Void doInBackground() throws Exception{
+                    RoomManager manager = new RoomManagerImpl(source);
+                    manager.deleteRoom(model.getRow(row));
+                    return null;
+                }
+
+                @Override
+                protected void done(){
+                    model.deleteRoom(row);
+                }
+            }
+            RoomDeleteSwingWorker worker = new RoomDeleteSwingWorker();
+            worker.execute();
+        }
+
+    }//GEN-LAST:event_deleteRoomActionPerformed
+
+    private void editRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editRoomActionPerformed
+        int row = tblRooms.getSelectedRow();
+        if (row < 0){
+            JOptionPane.showMessageDialog(null, "No room selected.");
+        }else{
+            RoomsTableModel model = (RoomsTableModel) tblRooms.getModel();
+            Room room = model.getRow(row);
+            setRoomEditorValues(room);
+            int res = JOptionPane.showConfirmDialog(null, roomEditorPanel, "edit room",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (res == JOptionPane.OK_OPTION){
+                Room newRoom = getRoomFromEditor();
+                newRoom.setID(room.getID());
+
+                class RoomEditSwingWorker extends SwingWorker<Void, Void>{
+                    @Override
+                    protected Void doInBackground() throws Exception{
+                        RoomManager manager = new RoomManagerImpl(source);
+                        manager.updateRoom(newRoom);
+                        return null;
+                    }
+
+                    @Override
+                    protected void done(){
+                        model.editRoom(newRoom, row);
+                    }
+                }
+                RoomEditSwingWorker worker = new RoomEditSwingWorker();
+                worker.execute();
+            }
+
+        }
+    }//GEN-LAST:event_editRoomActionPerformed
+
+    private void serachRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serachRoomActionPerformed
+        Long number = (Long) numberValue.getValue();
+        int capacity = (int) capacityValue.getValue();
+        boolean service = serviceValue.isSelected();
+        BigDecimal price = BigDecimal.valueOf((long) priceValue.getValue());
+
+        class RoomSearchSwingWorker extends SwingWorker<List<Room>,Void> {
+            @Override
+            protected List<Room> doInBackground() throws Exception {
+                RoomManager manager = new RoomManagerImpl(source);
+                List<Room> res;
+                if (number != 0){
+                    res = manager.getRoomByNumber(number);
+                }else if (service){
+                    res = manager.getRoomByAttributesWService(capacity, price);
+                }else{
+                    res = manager.getRoomByAttributes(capacity, price);
+                }
+                return res;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    loadRooms(get());
+                }
+                catch (ExecutionException ee) {
+                    JOptionPane.showMessageDialog(null, "Execution of room search thread has failed " + ee);
+                    System.exit(0);
+                }
+                catch (InterruptedException ie) {
+                    JOptionPane.showMessageDialog(null, "Room search has been interuppted " + ie);
+                    System.exit(0);
+                }
+            }
+        }
+        RoomSearchSwingWorker worker = new RoomSearchSwingWorker();
+        worker.execute();
+    }//GEN-LAST:event_serachRoomActionPerformed
+
     private Guest getGuestFromEditor() {
         return new Guest(guestEditorPanel.getNameValue(),
                          guestEditorPanel.getPhoneValue(),
                          guestEditorPanel.getAddressValue());
+    }
+
+    private Room getRoomFromEditor(){
+        return new Room(roomEditorPanel.getNumberValue(),
+                        roomEditorPanel.getCapacityValue(),
+                        roomEditorPanel.getServiceValue(),
+                        roomEditorPanel.getPriceValue());
     }
 
     private void setGuestEditorValues(Guest g) {
@@ -697,6 +834,28 @@ public class MainWindow extends javax.swing.JFrame {
         guestEditorPanel.setNameValue(name);
         guestEditorPanel.setAddressValue(address);
         guestEditorPanel.setPhoneValue(phone);
+    }
+
+    private void setRoomEditorValues(Room room){
+        Long number;
+        int capacity;
+        boolean service;
+        BigDecimal price;
+        if (room == null){
+            number = 0l;
+            capacity = 0;
+            service = false;
+            price = BigDecimal.ZERO;
+        }else{
+            number = room.getNumber();
+            capacity = room.getCapacity();
+            service = room.getService();
+            price = room.getPrice();
+        }
+        roomEditorPanel.setNumberValue(number);
+        roomEditorPanel.setCapacityValue(capacity);
+        roomEditorPanel.setServiceValue(service);
+        roomEditorPanel.setPriceValue(price);
     }
 
     /**
@@ -742,10 +901,12 @@ public class MainWindow extends javax.swing.JFrame {
 
     private final DataSource source;
 
-    private final GuestEditorPanel guestEditorPanel;
     private final RentEditorPanel rentEditorPanel;
+    private final GuestEditorPanel guestEditorPanel = new GuestEditorPanel();
+    private final RoomEditorPanel roomEditorPanel = new RoomEditorPanel();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addRoom;
     private javax.swing.JButton btnAddGuest;
     private javax.swing.JButton btnAddRent;
     private javax.swing.JButton btnDeleteGuest;
@@ -753,19 +914,18 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnEditGuest;
     private javax.swing.JButton btnEditRent;
     private javax.swing.JButton btnSearch;
+    private javax.swing.JSpinner capacityValue;
+    private javax.swing.JButton deleteRoom;
+    private javax.swing.JButton editRoom;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -782,12 +942,13 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JTabbedPane jTabbedPane2;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JSpinner numberValue;
+    private javax.swing.JSpinner priceValue;
+    private javax.swing.JButton serachRoom;
+    private javax.swing.JCheckBox serviceValue;
     private javax.swing.JTable tblGuests;
     private javax.swing.JTable tblRents;
+    private javax.swing.JTable tblRooms;
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }
