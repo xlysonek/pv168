@@ -28,6 +28,9 @@ public class ChooseRoomPanel extends javax.swing.JPanel {
         loadRooms();
     }
 
+    public void update() {
+        loadRooms();
+    }
     private void loadRooms() {
         class LoadRoomsWorker extends SwingWorker<List<Room>,Void> {
             @Override

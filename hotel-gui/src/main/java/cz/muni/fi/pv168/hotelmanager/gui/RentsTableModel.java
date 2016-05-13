@@ -14,7 +14,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author xlysonek
  */
-public class RentTableModel extends AbstractTableModel {
+public class RentsTableModel extends AbstractTableModel {
     private List<Rent> rents = new ArrayList<>();
 
     public Rent getRow(int row) {

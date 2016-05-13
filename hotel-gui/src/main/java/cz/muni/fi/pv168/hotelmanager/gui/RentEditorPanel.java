@@ -134,6 +134,7 @@ public class RentEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnChooseGuestActionPerformed
 
     private void btnChooseRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseRoomActionPerformed
+        chooseRoomPanel.update();
         int res = JOptionPane.showConfirmDialog(null, chooseRoomPanel,
                 "Choose room", JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE);
