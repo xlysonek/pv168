@@ -1,10 +1,14 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -12,10 +16,52 @@ import org.apache.derby.jdbc.EmbeddedDataSource;
 
 public class DatabaseCommons {
     public static DataSource getDataSource() {
+        Properties p = getDBConfig();
+        if (p == null) {
+            return null;
+        }
+        String db = p.getProperty("db");
+        String user = p.getProperty("user");
+        String pass = p.getProperty("pass");
         EmbeddedDataSource res = new EmbeddedDataSource();
-        res.setDatabaseName("memory:hotelManager");
+        res.setDatabaseName(db);
+        if (user != null && !user.equals("")) {
+            res.setUser(user);
+        }
+        if (pass != null && !pass.equals(pass)) {
+            res.setPassword(pass);
+        }
         res.setCreateDatabase("create");
-        createTables(res);
+        if (!tablesCreated(res)) {
+            createTables(res);
+        }
+        return res;
+    }
+
+    private static boolean tablesCreated(DataSource source) {
+        try (Connection c = source.getConnection()) {
+            DatabaseMetaData meta = c.getMetaData();
+            ResultSet res = meta.getTables(null, null, "%",
+                    new String[] {"TABLE"});
+            return res.next();
+        }
+        catch (SQLException e) {
+            return false;
+        }
+    }
+
+    private static Properties getDBConfig() {
+        InputStream s = DatabaseCommons.class.getResourceAsStream("dbconfig.properties");
+        if (s == null) {
+            return null;
+        }
+        Properties res = new Properties();
+        try {
+            res.load(s);
+        }
+        catch (IOException e) {
+            return null;
+        }
         return res;
     }
 

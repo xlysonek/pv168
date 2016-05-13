@@ -976,6 +976,10 @@ public class MainWindow extends javax.swing.JFrame {
         //</editor-fold>
 
         DataSource source = DatabaseCommons.getDataSource();
+        if (source == null) {
+            System.out.println("Failed to get data source.");
+            System.exit(1);
+        }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
