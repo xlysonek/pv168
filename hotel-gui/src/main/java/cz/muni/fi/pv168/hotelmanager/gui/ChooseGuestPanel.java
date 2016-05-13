@@ -23,8 +23,12 @@ public class ChooseGuestPanel extends javax.swing.JPanel {
      * Creates new form ChooseGuestPanel
      */
     public ChooseGuestPanel(DataSource source) {
-        initComponents();
         this.source = source;
+        initComponents();
+        loadGuests();
+    }
+
+    public void update() {
         loadGuests();
     }
 
@@ -41,10 +45,8 @@ public class ChooseGuestPanel extends javax.swing.JPanel {
                 try {
                     List<Guest> l = get();
                     loadGuests(l);
-
                 }
                 catch (ExecutionException e) {
-
                 }
                 catch (InterruptedException e) {
                     // can't happen
@@ -139,10 +141,8 @@ public class ChooseGuestPanel extends javax.swing.JPanel {
                 try {
                     List<Guest> l = get();
                     loadGuests(l);
-
                 }
                 catch (ExecutionException e) {
-
                 }
                 catch (InterruptedException e) {
                     // can't happen

@@ -10,6 +10,8 @@ import cz.muni.fi.pv168.hotelmanager.backend.Room;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.sql.DataSource;
 import javax.swing.JOptionPane;
 
@@ -23,8 +25,10 @@ public class RentEditorPanel extends javax.swing.JPanel {
      * Creates new form RentEditorPanel
      */
     public RentEditorPanel(DataSource source) {
-        initComponents();
         this.source = source;
+        this.chooseGuestPanel = new ChooseGuestPanel(source);
+        this.chooseRoomPanel = new ChooseRoomPanel(source);
+        initComponents();
     }
 
     /**
@@ -42,12 +46,8 @@ public class RentEditorPanel extends javax.swing.JPanel {
         btnChooseRoom = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        comboDaySince = new javax.swing.JComboBox<>();
-        comboMonthSince = new javax.swing.JComboBox<>();
-        spinnerYearSince = new javax.swing.JSpinner();
-        comboDayUntil = new javax.swing.JComboBox<>();
-        comboMonthUntil = new javax.swing.JComboBox<>();
-        spinnerYearUntil = new javax.swing.JSpinner();
+        spinnerDateSince = new javax.swing.JSpinner();
+        spinnerDateUntil = new javax.swing.JSpinner();
 
         btnChooseGuest.setText("Choose guest");
         btnChooseGuest.addActionListener(new java.awt.event.ActionListener() {
@@ -67,15 +67,11 @@ public class RentEditorPanel extends javax.swing.JPanel {
 
         jLabel2.setText("Until:");
 
-        comboDaySince.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "29", "30", "31" }));
+        spinnerDateSince.setModel(new javax.swing.SpinnerDateModel());
+        spinnerDateSince.setEditor(new javax.swing.JSpinner.DateEditor(spinnerDateSince, "yyyy-MM-dd"));
 
-        comboMonthSince.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
-
-        spinnerYearSince.setValue(2016);
-
-        comboDayUntil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "29", "30", "31" }));
-
-        comboMonthUntil.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+        spinnerDateUntil.setModel(new javax.swing.SpinnerDateModel());
+        spinnerDateUntil.setEditor(new javax.swing.JSpinner.DateEditor(spinnerDateUntil, "yyyy-MM-dd"));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -85,34 +81,22 @@ public class RentEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                            .addComponent(txtGuest))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnChooseGuest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnChooseRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboDayUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboMonthUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spinnerYearUntil))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(comboDaySince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboMonthSince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spinnerYearSince, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 42, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtGuest, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
-                            .addComponent(txtRoom))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnChooseGuest, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnChooseRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(spinnerDateUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(spinnerDateSince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 128, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -129,20 +113,17 @@ public class RentEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(comboMonthSince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboDaySince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerYearSince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerDateSince, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(comboDayUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(comboMonthUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerYearUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerDateUntil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnChooseGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseGuestActionPerformed
+        chooseGuestPanel.update();
         int res = JOptionPane.showConfirmDialog(null, chooseGuestPanel,
                 "Choose guest", JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE);
@@ -172,43 +153,57 @@ public class RentEditorPanel extends javax.swing.JPanel {
 
     public void setGuest(Guest guest) {
         this.guest = guest;
-        txtGuest.setText(guest.getName());
+        if (guest == null || guest.getName() == null) {
+            txtGuest.setText("");
+        }
+        else {
+            txtGuest.setText(guest.getName());
+        }
     }
 
     public void setRoom(Room room) {
         this.room = room;
-        txtRoom.setText(Long.toString(room.getNumber()));
+        if (room == null) {
+            txtRoom.setText("");
+        }
+        else {
+            txtRoom.setText(Long.toString(room.getNumber()));
+        }
     }
 
-    public LocalDate getSince() throws DateTimeException {
-        return LocalDate.of((Integer) spinnerYearSince.getValue(),
-                            (Integer) comboMonthSince.getSelectedItem(),
-                            (Integer) comboDaySince.getSelectedItem());
+    public LocalDate getSince() {
+        Date date = (Date) spinnerDateSince.getValue();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    public LocalDate getUntil() throws DateTimeException {
-        return LocalDate.of((Integer) spinnerYearUntil.getValue(),
-                            (Integer) comboMonthUntil.getSelectedItem(),
-                            (Integer) comboDayUntil.getSelectedItem());
+    public LocalDate getUntil() {
+        Date date = (Date) spinnerDateUntil.getValue();
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public void setSince(LocalDate date) {
+        Date tmp = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        spinnerDateSince.setValue(tmp);
+    }
+
+    public void setUntil(LocalDate date) {
+        Date tmp = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        spinnerDateUntil.setValue(tmp);
     }
 
     private DataSource source;
     private Guest guest;
     private Room room;
-    private ChooseGuestPanel chooseGuestPanel = new ChooseGuestPanel(source);
-    private ChooseRoomPanel chooseRoomPanel = new ChooseRoomPanel(source);
+    private ChooseGuestPanel chooseGuestPanel;
+    private ChooseRoomPanel chooseRoomPanel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnChooseGuest;
     private javax.swing.JButton btnChooseRoom;
-    private javax.swing.JComboBox<String> comboDaySince;
-    private javax.swing.JComboBox<String> comboDayUntil;
-    private javax.swing.JComboBox<String> comboMonthSince;
-    private javax.swing.JComboBox<String> comboMonthUntil;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JSpinner spinnerYearSince;
-    private javax.swing.JSpinner spinnerYearUntil;
+    private javax.swing.JSpinner spinnerDateSince;
+    private javax.swing.JSpinner spinnerDateUntil;
     private javax.swing.JTextField txtGuest;
     private javax.swing.JTextField txtRoom;
     // End of variables declaration//GEN-END:variables

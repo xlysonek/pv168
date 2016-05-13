@@ -9,6 +9,11 @@ import cz.muni.fi.pv168.hotelmanager.backend.DatabaseCommons;
 import cz.muni.fi.pv168.hotelmanager.backend.Guest;
 import cz.muni.fi.pv168.hotelmanager.backend.GuestManager;
 import cz.muni.fi.pv168.hotelmanager.backend.GuestManagerImpl;
+import cz.muni.fi.pv168.hotelmanager.backend.Rent;
+import cz.muni.fi.pv168.hotelmanager.backend.RentManager;
+import cz.muni.fi.pv168.hotelmanager.backend.RentManagerImpl;
+import cz.muni.fi.pv168.hotelmanager.backend.Room;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.sql.DataSource;
@@ -20,14 +25,15 @@ import javax.swing.SwingWorker;
  * @author Matlafous
  */
 public class MainWindow extends javax.swing.JFrame {
-    private DataSource source;
 
     /**
      * Creates new form MainWindow
      */
     public MainWindow(DataSource source) {
-        initComponents();
         this.source = source;
+        this.guestEditorPanel = new GuestEditorPanel();
+        this.rentEditorPanel = new RentEditorPanel(source);
+        initComponents();
         loadGuests();
     }
 
@@ -604,13 +610,64 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnAddRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddRentActionPerformed
+        setRentEditorValues(null);
         int res = JOptionPane.showConfirmDialog(null, rentEditorPanel,
-                "Add guest", JOptionPane.OK_CANCEL_OPTION,
+                "Add rent", JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE);
         if (res == JOptionPane.OK_OPTION) {
-            
+            Rent r = getRentFromEditor();
+            RentTableModel model = (RentTableModel) tblRents.getModel();
+
+            class RentAddSwingWorker extends SwingWorker<Void,Void> {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    RentManager manager = new RentManagerImpl(source);
+                    manager.createRent(r);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    model.addRent(r);
+                }
+            }
+            RentAddSwingWorker worker = new RentAddSwingWorker();
+            worker.execute();
         }
     }//GEN-LAST:event_btnAddRentActionPerformed
+
+    private void setRentEditorValues(Rent r) {
+        LocalDate since, until, now = LocalDate.now();
+        Guest guest = null;
+        Room room = null;
+        if (r == null) {
+            since = now;
+            until = now;
+        }
+        else {
+            guest = r.getGuest();
+            room = r.getRoom();
+            since = r.getStartDate();
+            if (since == null) {
+                since = now;
+            }
+            until = r.getEndDate();
+            if (until == null) {
+                until = now;
+            }
+        }
+        rentEditorPanel.setGuest(guest);
+        rentEditorPanel.setRoom(room);
+        rentEditorPanel.setSince(since);
+        rentEditorPanel.setUntil(until);
+    }
+
+    private Rent getRentFromEditor() {
+        return new Rent(rentEditorPanel.getSince(),
+                        rentEditorPanel.getUntil(),
+                        rentEditorPanel.getRoom(),
+                        rentEditorPanel.getGuest());
+    }
 
     private Guest getGuestFromEditor() {
         return new Guest(guestEditorPanel.getNameValue(),
@@ -683,8 +740,10 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
 
-    private final GuestEditorPanel guestEditorPanel = new GuestEditorPanel();
-    private final RentEditorPanel rentEditorPanel = new RentEditorPanel(source);
+    private final DataSource source;
+
+    private final GuestEditorPanel guestEditorPanel;
+    private final RentEditorPanel rentEditorPanel;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddGuest;
