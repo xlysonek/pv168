@@ -599,7 +599,18 @@ public class MainWindow extends javax.swing.JFrame {
 
                 @Override
                 protected void done() {
-                    model.deleteGuest(row);
+                    try {
+                        get();
+                        model.deleteGuest(row);
+
+                    }
+                    catch (InterruptedException e) {
+                        // can't happen
+                    }
+                    catch (ExecutionException e) {
+                        JOptionPane.showMessageDialog(null, "Failed to delete guest: " + e);
+                        return;
+                    }
                 }
             }
             GuestDeleteSwingWorker worker = new GuestDeleteSwingWorker();
@@ -771,7 +782,17 @@ public class MainWindow extends javax.swing.JFrame {
 
                 @Override
                 protected void done(){
-                    model.deleteRoom(row);
+                    try {
+                        get();
+                        model.deleteRoom(row);
+                    }
+                    catch (InterruptedException e) {
+                        // can't happen
+                    }
+                    catch (ExecutionException e) {
+                        JOptionPane.showMessageDialog(null, "Failed to delete room: " + e);
+                        return;
+                    }
                 }
             }
             RoomDeleteSwingWorker worker = new RoomDeleteSwingWorker();
