@@ -37,6 +37,8 @@ public class MainWindow extends javax.swing.JFrame {
     public MainWindow(DataSource source) {
         this.source = source;
         this.rentEditorPanel = new RentEditorPanel(source);
+        this.chooseGuestPanel = new ChooseGuestPanel(source);
+        this.chooseRoomPanel = new ChooseRoomPanel(source);
         initComponents();
         loadGuests();
         loadRooms();
@@ -124,6 +126,10 @@ public class MainWindow extends javax.swing.JFrame {
         btnChooseGuest = new javax.swing.JButton();
         spinnerDateSince = new javax.swing.JSpinner();
         spinnerDateUntil = new javax.swing.JSpinner();
+        txtChosenRoom = new javax.swing.JTextField();
+        btnResetRoom = new javax.swing.JButton();
+        txtChosenGuest = new javax.swing.JTextField();
+        btnResetGuest = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         addRoom = new javax.swing.JButton();
         editRoom = new javax.swing.JButton();
@@ -164,7 +170,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        btnSearchGuest.setText("search");
+        btnSearchGuest.setText("Search");
         btnSearchGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchGuestActionPerformed(evt);
@@ -183,13 +189,12 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 561, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEditGuest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnDeleteGuest, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(btnAddGuest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDeleteGuest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAddGuest, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                     .addComponent(jSeparator2)
                     .addComponent(txtName)
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -216,7 +221,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnSearchGuest)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -224,16 +229,16 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(0, 11, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 11, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jTabbedPane2.addTab("Guests", jPanel4);
@@ -254,7 +259,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        btnSearchRent.setText("search");
+        btnSearchRent.setText("Search");
         btnSearchRent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchRentActionPerformed(evt);
@@ -274,14 +279,14 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel10.setText("Guest");
 
-        btnChooseRoom.setText("Choose Room");
+        btnChooseRoom.setText("Choose");
         btnChooseRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChooseRoomActionPerformed(evt);
             }
         });
 
-        btnChooseGuest.setText("Choose Guest");
+        btnChooseGuest.setText("Choose");
         btnChooseGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChooseGuestActionPerformed(evt);
@@ -294,36 +299,57 @@ public class MainWindow extends javax.swing.JFrame {
         spinnerDateUntil.setModel(new javax.swing.SpinnerDateModel());
         spinnerDateUntil.setEditor(new javax.swing.JSpinner.DateEditor(spinnerDateUntil, "yyyy-MM-dd"));
 
+        txtChosenRoom.setEditable(false);
+
+        btnResetRoom.setText("Reset");
+        btnResetRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetRoomActionPerformed(evt);
+            }
+        });
+
+        txtChosenGuest.setEditable(false);
+
+        btnResetGuest.setText("Reset");
+        btnResetGuest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnResetGuestActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel7Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(131, 143, Short.MAX_VALUE))
-                    .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addComponent(jLabel9)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtChosenRoom, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtChosenGuest, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnEditRent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnDeleteRent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAddRent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnChooseRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnChooseGuest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel7Layout.createSequentialGroup()
-                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel7)
-                                    .addComponent(btnSearchRent)
-                                    .addComponent(jLabel10)
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spinnerDateSince)
-                                    .addComponent(spinnerDateUntil))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addComponent(btnChooseRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnResetRoom))
+                            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel7)
+                                .addComponent(jLabel10)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spinnerDateSince)
+                                .addComponent(spinnerDateUntil))
+                            .addComponent(btnSearchRent)
+                            .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addComponent(btnChooseGuest)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnResetGuest)))
+                        .addComponent(btnEditRent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnAddRent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDeleteRent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,25 +372,32 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnChooseRoom)
+                .addComponent(txtChosenRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnChooseRoom)
+                    .addComponent(btnResetRoom))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnChooseGuest)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSearchRent)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                .addComponent(txtChosenGuest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnChooseGuest)
+                    .addComponent(btnResetGuest))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSearchRent))
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,21 +411,21 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 734, Short.MAX_VALUE)
+            .addGap(0, 787, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(0, 2, Short.MAX_VALUE)
+                    .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 2, Short.MAX_VALUE)))
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 415, Short.MAX_VALUE)
+            .addGap(0, 443, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
-                    .addGap(0, 30, Short.MAX_VALUE)
+                    .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 31, Short.MAX_VALUE)))
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         jTabbedPane2.addTab("Rents", jPanel2);
@@ -450,23 +483,23 @@ public class MainWindow extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(editRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(deleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                    .addComponent(deleteRoom, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
                     .addComponent(addRoom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSeparator1)
                     .addComponent(numberValue)
                     .addComponent(capacityValue)
                     .addComponent(priceValue)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(serachRoom)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 60, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(serviceValue)))
+                        .addComponent(serviceValue))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(serachRoom)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -500,8 +533,8 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(jLabel5))
                         .addGap(7, 7, 7)
                         .addComponent(serachRoom)
-                        .addGap(0, 134, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE))
+                        .addGap(0, 102, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -842,10 +875,35 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDeleteRentActionPerformed
 
     private void btnChooseRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseRoomActionPerformed
+        chooseRoomPanel.update();
+        int res = JOptionPane.showConfirmDialog(null, chooseRoomPanel,
+                "Choose room", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+        if (res == JOptionPane.OK_OPTION) {
+            this.chosenRoom = chooseRoomPanel.getRoom();
+            if (this.chosenRoom != null) {
+                txtChosenRoom.setText(Long.valueOf(this.chosenRoom.getNumber()).toString());
+            }
+        }
+
     }//GEN-LAST:event_btnChooseRoomActionPerformed
 
     private void btnChooseGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChooseGuestActionPerformed
-        // TODO add your handling code here:
+        chooseGuestPanel.update();
+        int res = JOptionPane.showConfirmDialog(null, chooseGuestPanel,
+                "Choose guest", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+        if (res == JOptionPane.OK_OPTION) {
+            chosenGuest = chooseGuestPanel.getGuest();
+            if (chosenGuest != null) {
+                if (chosenGuest.getName() == null) {
+                    txtChosenGuest.setText("");
+                }
+                else {
+                    txtChosenGuest.setText(chosenGuest.getName());
+                }
+            }
+        }
     }//GEN-LAST:event_btnChooseGuestActionPerformed
 
     private void btnSearchRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchRentActionPerformed
@@ -855,7 +913,20 @@ public class MainWindow extends javax.swing.JFrame {
             @Override
             protected List<Rent> doInBackground() throws Exception {
                 RentManager m = new RentManagerImpl(source);
-                List<Rent> res = m.getRentByDate(since, until);
+                List<Rent> res;
+                if (chosenGuest == null && chosenRoom == null) {
+                    res = m.getRentByDate(since, until);
+                }
+                else if (chosenGuest != null && chosenRoom == null) {
+                    res = m.getRentByGuest(chosenGuest.getID(), since, until);
+                }
+                else if (chosenGuest == null && chosenRoom != null) {
+                    res = m.getRentByRoom(chosenRoom.getID(), since, until);
+                }
+                else {
+                    res = m.getRentByRoomGuest(chosenRoom.getID(), chosenGuest.getID(),
+                            since, until);
+                }
                 return res;
             }
 
@@ -874,6 +945,16 @@ public class MainWindow extends javax.swing.JFrame {
         RentSearchSwingWorker worker = new RentSearchSwingWorker();
         worker.execute();
     }//GEN-LAST:event_btnSearchRentActionPerformed
+
+    private void btnResetRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetRoomActionPerformed
+        chosenRoom = null;
+        txtChosenRoom.setText("");
+    }//GEN-LAST:event_btnResetRoomActionPerformed
+
+    private void btnResetGuestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnResetGuestActionPerformed
+        chosenGuest = null;
+        txtChosenGuest.setText("");
+    }//GEN-LAST:event_btnResetGuestActionPerformed
 
     private LocalDate getSince() {
         Date date = (Date) spinnerDateSince.getValue();
@@ -995,6 +1076,12 @@ public class MainWindow extends javax.swing.JFrame {
     private final GuestEditorPanel guestEditorPanel = new GuestEditorPanel();
     private final RoomEditorPanel roomEditorPanel = new RoomEditorPanel();
 
+    private final ChooseGuestPanel chooseGuestPanel;
+    private final ChooseRoomPanel chooseRoomPanel;
+
+    private Guest chosenGuest = null;
+    private Room chosenRoom = null;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRoom;
     private javax.swing.JButton btnAddGuest;
@@ -1005,6 +1092,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton btnDeleteRent;
     private javax.swing.JButton btnEditGuest;
     private javax.swing.JButton btnEditRent;
+    private javax.swing.JButton btnResetGuest;
+    private javax.swing.JButton btnResetRoom;
     private javax.swing.JButton btnSearchGuest;
     private javax.swing.JButton btnSearchRent;
     private javax.swing.JSpinner capacityValue;
@@ -1041,6 +1130,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTable tblGuests;
     private javax.swing.JTable tblRents;
     private javax.swing.JTable tblRooms;
+    private javax.swing.JTextField txtChosenGuest;
+    private javax.swing.JTextField txtChosenRoom;
     private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }

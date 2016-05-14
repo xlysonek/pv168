@@ -63,6 +63,9 @@ public interface RentManager {
 	 */
 	public List<Rent> getRentByRoom(Long roomId, LocalDate startDate, LocalDate endDate);
 
+        public List<Rent> getRentByRoomGuest(Long roomId, Long guestId,
+                LocalDate startDate, LocalDate endDate);
+
 	/**
 	 * Gets all rents existing in given date interval
 	 * @param startDate

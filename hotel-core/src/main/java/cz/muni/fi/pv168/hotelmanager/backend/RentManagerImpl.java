@@ -258,6 +258,53 @@ public class RentManagerImpl implements RentManager {
             }
 	}
 
+        @Override
+	public List<Rent> getRentByRoomGuest(Long roomId, Long guestId,
+                LocalDate startDate, LocalDate endDate) {
+
+		if (roomId == null){
+                    throw new IllegalArgumentException("Room id hasnt been initialized");
+                }
+                if (guestId == null){
+                    throw new IllegalArgumentException("Guest id hasnt been initialized");
+                }
+
+                if (startDate == null){
+                    throw new IllegalArgumentException("startDate is null.");
+                }
+                if (endDate == null){
+                    throw new IllegalArgumentException("endDate is null");
+                }
+                if (startDate.isAfter(endDate)){
+                    throw new IllegalArgumentException("startDate differs from endDate by negative value.");
+                }
+
+                try (Connection connection = dataSource.getConnection();
+                        PreparedStatement statement = connection.prepareStatement(
+                                "SELECT id, startDate, endDate, roomID, guestID FROM rent "
+                                        + "WHERE roomID = ? AND guestID = ? AND "
+                                        + dateSubquery)){
+
+                    statement.setLong(1, roomId);
+                    statement.setLong(2, guestId);
+                    statement.setDate(3, java.sql.Date.valueOf(startDate));
+                    statement.setDate(4, java.sql.Date.valueOf(endDate));
+                    statement.setDate(5, java.sql.Date.valueOf(startDate));
+                    statement.setDate(6, java.sql.Date.valueOf(endDate));
+
+                    ResultSet resultSet = statement.executeQuery();
+                    List<Rent> result = new ArrayList<>();
+
+                    while(resultSet.next()){
+                        result.add(resultSetToRent(resultSet));
+                    }
+                    return result;
+                } catch (SQLException ex) {
+                throw new RentManagerException("Error when retrieving list of rents by room id" +
+                        roomId + ", guest id " + guestId + " and date " + startDate + " - " + endDate, ex);
+            }
+        }
+
 	@Override
 	public List<Rent> getRentByDate(LocalDate startDate, LocalDate endDate) {
 		if (startDate == null){
