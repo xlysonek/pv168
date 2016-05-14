@@ -471,6 +471,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         numberValue.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 1L));
 
+        priceValue.setModel(new javax.swing.SpinnerNumberModel(0L, 0L, null, 1L));
+
         jLabel5.setText("Service");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -821,7 +823,7 @@ public class MainWindow extends javax.swing.JFrame {
             protected List<Room> doInBackground() throws Exception {
                 RoomManager manager = new RoomManagerImpl(source);
                 List<Room> res;
-                if (number != 0){
+                if (!number.equals(0)){
                     res = manager.getRoomByNumber(number);
                 }else if (service){
                     res = manager.getRoomByAttributesWService(capacity, price);

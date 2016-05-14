@@ -266,7 +266,7 @@ public class RoomManagerImpl implements RoomManager {
         try (Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT id, number, capacity, service, price FROM room "
-                 + "WHERE capacity > ? AND service = ? AND price < ? ")) {
+                 + "WHERE capacity >= ? AND service = ? AND price <= ? ")) {
 
             statement.setInt(1, capacity);
             statement.setBoolean(2, true);
@@ -290,7 +290,7 @@ public class RoomManagerImpl implements RoomManager {
         try (Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT id, number, capacity, service, price FROM room "
-                 + "WHERE capacity > ? AND price < ? ")) {
+                 + "WHERE capacity >= ? AND price <= ? ")) {
 
             statement.setInt(1, capacity);
             statement.setBigDecimal(2, price);
@@ -307,4 +307,64 @@ public class RoomManagerImpl implements RoomManager {
         }
     }
 
+    @Override
+    public List<Room> getFreeRoomByAttributesWService(int minCapacity,
+            BigDecimal maxPrice, LocalDate since, LocalDate until) {
+
+            try (Connection connection = dataSource.getConnection();
+                    PreparedStatement statement = connection.prepareStatement(
+                            "SELECT id, number, capacity, service, price FROM room "
+                          + "WHERE id NOT IN (SELECT roomID FROM rent WHERE "
+                          + dateSubquery + ") AND service = ? "
+                          + "AND capacity >= ? AND price <= ?")) {
+
+                statement.setDate(1, java.sql.Date.valueOf(since));
+                statement.setDate(2, java.sql.Date.valueOf(until));
+                statement.setDate(3, java.sql.Date.valueOf(since));
+                statement.setDate(4, java.sql.Date.valueOf(until));
+                statement.setBoolean(5, true);
+                statement.setInt(6, minCapacity);
+                statement.setBigDecimal(7, maxPrice);
+
+                ResultSet resultSet = statement.executeQuery();
+                List<Room> result = new ArrayList<>();
+
+                while(resultSet.next()){
+                    result.add(resultSetToRoom(resultSet));
+                }
+                return result;
+            } catch (SQLException ex) {
+                throw new DatabaseException("Error when retrieving list of free rooms: " + ex, ex);
+            }
+    }
+
+    @Override
+    public List<Room> getFreeRoomByAttributes(int minCapacity,
+            BigDecimal maxPrice, LocalDate since, LocalDate until) {
+
+            try (Connection connection = dataSource.getConnection();
+                    PreparedStatement statement = connection.prepareStatement(
+                            "SELECT id, number, capacity, service, price FROM room "
+                          + "WHERE id NOT IN (SELECT roomID FROM rent WHERE "
+                          + dateSubquery + ") "
+                          + "AND capacity >= ? AND price <= ?")) {
+
+                statement.setDate(1, java.sql.Date.valueOf(since));
+                statement.setDate(2, java.sql.Date.valueOf(until));
+                statement.setDate(3, java.sql.Date.valueOf(since));
+                statement.setDate(4, java.sql.Date.valueOf(until));
+                statement.setInt(5, minCapacity);
+                statement.setBigDecimal(6, maxPrice);
+
+                ResultSet resultSet = statement.executeQuery();
+                List<Room> result = new ArrayList<>();
+
+                while(resultSet.next()){
+                    result.add(resultSetToRoom(resultSet));
+                }
+                return result;
+            } catch (SQLException ex) {
+                throw new DatabaseException("Error when retrieving list of free rooms: " + ex, ex);
+            }
+    }
 }

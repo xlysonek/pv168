@@ -81,4 +81,10 @@ public interface RoomManager {
      */
 
     public List<Room> getRoomByAttributes(int capacity, BigDecimal price);
+
+    public List<Room> getFreeRoomByAttributesWService(int minCapacity,
+            BigDecimal maxPrice, LocalDate since, LocalDate until);
+
+    public List<Room> getFreeRoomByAttributes(int minCapacity,
+            BigDecimal maxPrice, LocalDate since, LocalDate until);
 }
