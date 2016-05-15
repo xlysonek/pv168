@@ -58,11 +58,12 @@ public class GuestEditorPanel extends javax.swing.JPanel {
         txtAddress = new javax.swing.JTextField();
         txtPhone = new javax.swing.JTextField();
 
-        jLabel1.setText("Name:");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("GuestEditorPanel.jLabel1.text")); // NOI18N
 
-        jLabel2.setText("Address:");
+        jLabel2.setText(bundle.getString("GuestEditorPanel.jLabel2.text")); // NOI18N
 
-        jLabel3.setText("Phone:");
+        jLabel3.setText(bundle.getString("GuestEditorPanel.jLabel3.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

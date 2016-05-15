@@ -75,13 +75,14 @@ public class RoomEditorPanel extends javax.swing.JPanel {
         serviceCheck = new javax.swing.JCheckBox();
         capacityValue = new javax.swing.JSpinner();
 
-        jLabel1.setText("Number:");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("RoomEditorPanel.jLabel1.text")); // NOI18N
 
-        jLabel2.setText("Service:");
+        jLabel2.setText(bundle.getString("RoomEditorPanel.jLabel2.text")); // NOI18N
 
-        jLabel3.setText("Price:");
+        jLabel3.setText(bundle.getString("RoomEditorPanel.jLabel3.text")); // NOI18N
 
-        jLabel4.setText("Capacity:");
+        jLabel4.setText(bundle.getString("RoomEditorPanel.jLabel4.text")); // NOI18N
 
         numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
         numberValue.setName(""); // NOI18N

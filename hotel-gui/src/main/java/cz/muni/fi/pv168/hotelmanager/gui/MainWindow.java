@@ -18,9 +18,12 @@ import cz.muni.fi.pv168.hotelmanager.backend.Room;
 import cz.muni.fi.pv168.hotelmanager.backend.RoomManager;
 import cz.muni.fi.pv168.hotelmanager.backend.RoomManagerImpl;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.ZoneId;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -161,35 +164,36 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btnAddGuest.setText("Add new Guest");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle_en_US"); // NOI18N
+        btnAddGuest.setText(bundle.getString("MainWindow.btnAddGuest.text")); // NOI18N
         btnAddGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddGuestActionPerformed(evt);
             }
         });
 
-        btnEditGuest.setText("Edit Guest");
+        btnEditGuest.setText(bundle.getString("MainWindow.btnEditGuest.text")); // NOI18N
         btnEditGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEditGuestActionPerformed(evt);
             }
         });
 
-        btnDeleteGuest.setText("Delete Guest");
+        btnDeleteGuest.setText(bundle.getString("MainWindow.btnDeleteGuest.text")); // NOI18N
         btnDeleteGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteGuestActionPerformed(evt);
             }
         });
 
-        btnSearchGuest.setText("Search");
+        btnSearchGuest.setText(bundle.getString("MainWindow.btnSearchGuest.text")); // NOI18N
         btnSearchGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchGuestActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Guest name");
+        jLabel4.setText(bundle.getString("MainWindow.jLabel4.text")); // NOI18N
 
         tblGuests.setModel(new GuestsTableModel());
         tblGuests.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -253,52 +257,52 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane2.addTab("Guests", jPanel4);
+        jTabbedPane2.addTab(bundle.getString("MainWindow.jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
 
-        btnAddRent.setText("Add new Rent");
+        btnAddRent.setText(bundle.getString("MainWindow.btnAddRent.text")); // NOI18N
         btnAddRent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddRentActionPerformed(evt);
             }
         });
 
-        btnEditRent.setText("Edit Rent");
+        btnEditRent.setText(bundle.getString("MainWindow.btnEditRent.text")); // NOI18N
 
-        btnDeleteRent.setText("Delete Rent");
+        btnDeleteRent.setText(bundle.getString("MainWindow.btnDeleteRent.text")); // NOI18N
         btnDeleteRent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteRentActionPerformed(evt);
             }
         });
 
-        btnSearchRent.setText("Search");
+        btnSearchRent.setText(bundle.getString("MainWindow.btnSearchRent.text")); // NOI18N
         btnSearchRent.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchRentActionPerformed(evt);
             }
         });
 
-        jLabel7.setText("From Date");
+        jLabel7.setText(bundle.getString("MainWindow.jLabel7.text")); // NOI18N
 
-        jLabel8.setText("To Date");
+        jLabel8.setText(bundle.getString("MainWindow.jLabel8.text")); // NOI18N
 
-        jLabel9.setText("Room");
+        jLabel9.setText(bundle.getString("MainWindow.jLabel9.text")); // NOI18N
 
         tblRents.setModel(new cz.muni.fi.pv168.hotelmanager.gui.RentsTableModel());
         tblRents.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblRents.getTableHeader().setReorderingAllowed(false);
         jScrollPane5.setViewportView(tblRents);
 
-        jLabel10.setText("Guest");
+        jLabel10.setText(bundle.getString("MainWindow.jLabel10.text")); // NOI18N
 
-        btnChooseRoom.setText("Choose");
+        btnChooseRoom.setText(bundle.getString("MainWindow.btnChooseRoom.text")); // NOI18N
         btnChooseRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChooseRoomActionPerformed(evt);
             }
         });
 
-        btnChooseGuest.setText("Choose");
+        btnChooseGuest.setText(bundle.getString("MainWindow.btnChooseGuest.text")); // NOI18N
         btnChooseGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChooseGuestActionPerformed(evt);
@@ -313,7 +317,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         txtChosenRoom.setEditable(false);
 
-        btnResetRoom.setText("Reset");
+        btnResetRoom.setText(bundle.getString("MainWindow.btnResetRoom.text")); // NOI18N
         btnResetRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetRoomActionPerformed(evt);
@@ -322,7 +326,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         txtChosenGuest.setEditable(false);
 
-        btnResetGuest.setText("Reset");
+        btnResetGuest.setText(bundle.getString("MainWindow.btnResetGuest.text")); // NOI18N
         btnResetGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnResetGuestActionPerformed(evt);
@@ -440,52 +444,52 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        jTabbedPane2.addTab("Rents", jPanel2);
+        jTabbedPane2.addTab(bundle.getString("MainWindow.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
-        addRoom.setText("Add new Room");
+        addRoom.setText(bundle.getString("MainWindow.addRoom.text")); // NOI18N
         addRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addRoomActionPerformed(evt);
             }
         });
 
-        editRoom.setText("Edit Room");
+        editRoom.setText(bundle.getString("MainWindow.editRoom.text")); // NOI18N
         editRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editRoomActionPerformed(evt);
             }
         });
 
-        deleteRoom.setText("Delete Room");
+        deleteRoom.setText(bundle.getString("MainWindow.deleteRoom.text")); // NOI18N
         deleteRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteRoomActionPerformed(evt);
             }
         });
 
-        serachRoom.setText("search");
+        serachRoom.setText(bundle.getString("MainWindow.serachRoom.text")); // NOI18N
         serachRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 serachRoomActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Room Number");
+        jLabel1.setText(bundle.getString("MainWindow.jLabel1.text")); // NOI18N
 
-        jLabel2.setText("Minimal capacity");
+        jLabel2.setText(bundle.getString("MainWindow.jLabel2.text")); // NOI18N
 
-        jLabel3.setText("Maximum price");
+        jLabel3.setText(bundle.getString("MainWindow.jLabel3.text")); // NOI18N
 
         tblRooms.setModel(new RoomsTableModel());
         tblRooms.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tblRooms.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblRooms);
 
-        numberValue.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 1L));
+        numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
 
-        priceValue.setModel(new javax.swing.SpinnerNumberModel(0L, 0L, null, 1L));
+        priceValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), null, Long.valueOf(1L)));
 
-        jLabel5.setText("Service");
+        jLabel5.setText(bundle.getString("MainWindow.jLabel5.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -552,7 +556,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jTabbedPane2.addTab("Rooms", jPanel3);
+        jTabbedPane2.addTab(bundle.getString("MainWindow.jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1128,6 +1132,17 @@ public class MainWindow extends javax.swing.JFrame {
 
     private Guest chosenGuest = null;
     private Room chosenRoom = null;
+
+    Locale czech = new Locale("cs", "CZ");
+    Locale englishUS = Locale.US;
+    Locale deutsch = Locale.GERMAN;
+
+    NumberFormat csFormat = NumberFormat.getCurrencyInstance(czech);
+    NumberFormat enFormat = NumberFormat.getCurrencyInstance(czech);
+    NumberFormat deFormat = NumberFormat.getCurrencyInstance(czech);
+
+    Currency crowns = Currency.getInstance("CZ");
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRoom;

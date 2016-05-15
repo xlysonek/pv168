@@ -7,9 +7,7 @@ package cz.muni.fi.pv168.hotelmanager.gui;
 
 import cz.muni.fi.pv168.hotelmanager.backend.Guest;
 import cz.muni.fi.pv168.hotelmanager.backend.Room;
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.sql.DataSource;
@@ -49,23 +47,24 @@ public class RentEditorPanel extends javax.swing.JPanel {
         spinnerDateSince = new javax.swing.JSpinner();
         spinnerDateUntil = new javax.swing.JSpinner();
 
-        btnChooseGuest.setText("Choose guest");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle"); // NOI18N
+        btnChooseGuest.setText(bundle.getString("RentEditorPanel.btnChooseGuest.text")); // NOI18N
         btnChooseGuest.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChooseGuestActionPerformed(evt);
             }
         });
 
-        btnChooseRoom.setText("Choose room");
+        btnChooseRoom.setText(bundle.getString("RentEditorPanel.btnChooseRoom.text")); // NOI18N
         btnChooseRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChooseRoomActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Since:");
+        jLabel1.setText(bundle.getString("RentEditorPanel.jLabel1.text")); // NOI18N
 
-        jLabel2.setText("Until:");
+        jLabel2.setText(bundle.getString("RentEditorPanel.jLabel2.text")); // NOI18N
 
         spinnerDateSince.setModel(new javax.swing.SpinnerDateModel());
         spinnerDateSince.setEditor(new javax.swing.JSpinner.DateEditor(spinnerDateSince, "yyyy-MM-dd"));

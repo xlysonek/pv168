@@ -80,9 +80,10 @@ public class ChooseGuestPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblGuests = new javax.swing.JTable();
 
-        jLabel1.setText("Name:");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle"); // NOI18N
+        jLabel1.setText(bundle.getString("ChooseGuestPanel.jLabel1.text")); // NOI18N
 
-        btnSearch.setText("Search");
+        btnSearch.setText(bundle.getString("ChooseGuestPanel.btnSearch.text")); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);

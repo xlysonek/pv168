@@ -94,19 +94,20 @@ public class ChooseRoomPanel extends javax.swing.JPanel {
         spinnerDateUntil = new javax.swing.JSpinner();
         checkFree = new javax.swing.JCheckBox();
 
-        checkServiceOnly.setText("With service only");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle"); // NOI18N
+        checkServiceOnly.setText(bundle.getString("ChooseRoomPanel.checkServiceOnly.text")); // NOI18N
 
-        jLabel4.setText("Maximum price:");
+        jLabel4.setText(bundle.getString("ChooseRoomPanel.jLabel4.text")); // NOI18N
 
-        spinnerMaxPrice.setModel(new javax.swing.SpinnerNumberModel(0L, 0L, null, 1L));
+        spinnerMaxPrice.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), null, Long.valueOf(1L)));
 
-        jLabel2.setText("Minimum capacity");
+        jLabel2.setText(bundle.getString("ChooseRoomPanel.jLabel2.text")); // NOI18N
 
-        spinnerRoomNumber.setModel(new javax.swing.SpinnerNumberModel(0L, 0L, null, 1L));
+        spinnerRoomNumber.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), null, Long.valueOf(1L)));
 
-        spinnerCapacity.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
+        spinnerCapacity.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 
-        btnSearch.setText("Search");
+        btnSearch.setText(bundle.getString("ChooseRoomPanel.btnSearch.text")); // NOI18N
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSearchActionPerformed(evt);
@@ -118,7 +119,7 @@ public class ChooseRoomPanel extends javax.swing.JPanel {
         tblRooms.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(tblRooms);
 
-        jLabel1.setText("Number:");
+        jLabel1.setText(bundle.getString("ChooseRoomPanel.jLabel1.text")); // NOI18N
 
         spinnerDateSince.setModel(new javax.swing.SpinnerDateModel());
         spinnerDateSince.setEditor(new javax.swing.JSpinner.DateEditor(spinnerDateSince, "yyyy-MM-dd"));
@@ -126,7 +127,7 @@ public class ChooseRoomPanel extends javax.swing.JPanel {
         spinnerDateUntil.setModel(new javax.swing.SpinnerDateModel());
         spinnerDateUntil.setEditor(new javax.swing.JSpinner.DateEditor(spinnerDateUntil, "yyyy-MM-dd"));
 
-        checkFree.setText("Free in date range");
+        checkFree.setText(bundle.getString("ChooseRoomPanel.checkFree.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
