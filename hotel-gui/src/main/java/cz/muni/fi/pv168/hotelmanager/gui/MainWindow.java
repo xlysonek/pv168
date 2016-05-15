@@ -5,6 +5,7 @@
  */
 package cz.muni.fi.pv168.hotelmanager.gui;
 
+
 import cz.muni.fi.pv168.hotelmanager.backend.DatabaseCommons;
 import cz.muni.fi.pv168.hotelmanager.backend.Guest;
 import cz.muni.fi.pv168.hotelmanager.backend.GuestManager;
@@ -21,6 +22,9 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.sql.DataSource;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
@@ -30,6 +34,8 @@ import javax.swing.SwingWorker;
  * @author Matlafous
  */
 public class MainWindow extends javax.swing.JFrame {
+
+    private final static Logger logger = Logger.getLogger(MainWindow.class.getName());
 
     /**
      * Creates new form MainWindow
@@ -49,6 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
         GuestManager m = new GuestManagerImpl(source);
         List<Guest> l = m.getAllGuests();
         loadGuests(l);
+        logger.log(Level.INFO, "All guests loaded");
     }
 
     private void loadGuests(List<Guest> list) {
@@ -57,12 +64,14 @@ public class MainWindow extends javax.swing.JFrame {
         for (Guest g : list) {
             model.addGuest(g);
         }
+        logger.log(Level.INFO, "Specific guests loaded");
     }
 
     private void loadRents() {
         RentManager m = new RentManagerImpl(source);
         List<Rent> l = m.getAllRents();
         loadRents(l);
+        logger.log(Level.INFO, "All rents loaded");
     }
 
     private void loadRents(List<Rent> list) {
@@ -71,12 +80,14 @@ public class MainWindow extends javax.swing.JFrame {
         for (Rent r : list) {
             model.addRent(r);
         }
+        logger.log(Level.INFO, "Specific rents loaded");
     }
 
     private void loadRooms(){
         RoomManager manager = new RoomManagerImpl(source);
         List<Room> roomsList = manager.getAllRooms();
         loadRooms(roomsList);
+        logger.log(Level.INFO, "All rooms loaded");
     }
 
     private void loadRooms(List<Room> list){
@@ -85,6 +96,7 @@ public class MainWindow extends javax.swing.JFrame {
         for (Room room : list){
             table.addRoom(room);
         }
+        logger.log(Level.INFO, "Specific rooms loaded");
     }
 
     /**
@@ -574,6 +586,7 @@ public class MainWindow extends javax.swing.JFrame {
                 @Override
                 protected void done() {
                     model.addGuest(g);
+                    logger.log(Level.INFO, "new guest added {0}", g);
                 }
             }
 
@@ -602,6 +615,7 @@ public class MainWindow extends javax.swing.JFrame {
                     try {
                         get();
                         model.deleteGuest(row);
+                        logger.log(Level.INFO, "guest deleted {0}", row);
 
                     }
                     catch (InterruptedException e) {
@@ -645,6 +659,7 @@ public class MainWindow extends javax.swing.JFrame {
                     @Override
                     protected void done() {
                         model.editGuest(newGuest, row);
+                        logger.log(Level.INFO, "guest edited{0} to {1}", new Object[]{row, newGuest});
                     }
                 }
 
@@ -668,6 +683,7 @@ public class MainWindow extends javax.swing.JFrame {
             protected void done() {
                 try {
                     loadGuests(get());
+                    logger.log(Level.INFO, "guest search performed");
                 }
                 catch (ExecutionException e) {
 
@@ -701,6 +717,7 @@ public class MainWindow extends javax.swing.JFrame {
                 @Override
                 protected void done() {
                     model.addRent(r);
+                    logger.log(Level.INFO, "new rent added {0}", r);
                 }
             }
             RentAddSwingWorker worker = new RentAddSwingWorker();
@@ -759,6 +776,7 @@ public class MainWindow extends javax.swing.JFrame {
                 @Override
                 protected void done() {
                     model.addRoom(room);
+                    logger.log(Level.INFO, "new room added {0}", room);
                 }
             }
             RoomAddSwingWorker worker = new RoomAddSwingWorker();
@@ -785,6 +803,7 @@ public class MainWindow extends javax.swing.JFrame {
                     try {
                         get();
                         model.deleteRoom(row);
+                        logger.log(Level.INFO, "room deleted {0}", row);
                     }
                     catch (InterruptedException e) {
                         // can't happen
@@ -825,6 +844,7 @@ public class MainWindow extends javax.swing.JFrame {
                     @Override
                     protected void done(){
                         model.editRoom(newRoom, row);
+                        logger.log(Level.INFO, "room edited{0} to {1}", new Object[]{row, newRoom});
                     }
                 }
                 RoomEditSwingWorker worker = new RoomEditSwingWorker();
@@ -858,6 +878,7 @@ public class MainWindow extends javax.swing.JFrame {
             protected void done() {
                 try {
                     loadRooms(get());
+                    logger.log(Level.INFO, "room search performed");
                 }
                 catch (ExecutionException ee) {
                     JOptionPane.showMessageDialog(null, "Execution of room search thread has failed " + ee);
@@ -890,6 +911,7 @@ public class MainWindow extends javax.swing.JFrame {
                 @Override
                 protected void done(){
                     model.deleteRent(row);
+                    logger.log(Level.INFO, "rent deleted {0}", row);
                 }
             }
             RentDeleteSwingWorker worker = new RentDeleteSwingWorker();
@@ -957,6 +979,7 @@ public class MainWindow extends javax.swing.JFrame {
             protected void done() {
                 try {
                     loadRents(get());
+                    logger.log(Level.INFO, "rent search performed");
                 }
                 catch (ExecutionException e) {
                 }
@@ -1087,6 +1110,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new MainWindow(source).setVisible(true);
             }
