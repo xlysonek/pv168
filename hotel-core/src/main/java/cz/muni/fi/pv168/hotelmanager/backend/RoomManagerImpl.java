@@ -1,5 +1,6 @@
 package cz.muni.fi.pv168.hotelmanager.backend;
 
+import cz.muni.fi.pv168.hotelmanager.logger.DBUtils;
 import java.io.File;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -10,10 +11,14 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 
 public class RoomManagerImpl implements RoomManager {
+
+    private static final Logger logger = Logger.getLogger(RoomManagerImpl.class.getName());
 
     private final DataSource dataSource;
     private final String dateSubquery = "NOT ((startDate < ? AND endDate < ?) OR (startDate > ? AND endDate > ?))";
@@ -39,14 +44,16 @@ public class RoomManagerImpl implements RoomManager {
             statement.setBigDecimal(4, room.getPrice());
 
             int count = statement.executeUpdate();
+            DBUtils.checkUpdatesCount(count, room, true);
             if (count != 1){
                 throw new RoomManagerException("");
             }
 
-            ResultSet key = statement.getGeneratedKeys();
-            room.setID(getKey(key, room));
+            Long id = DBUtils.getId(statement.getGeneratedKeys());
+            room.setID(id);
 
         }catch (SQLException ex){
+            logger.log(Level.SEVERE, "Room insertion was interupted by an error" + room, ex);
             throw new RoomManagerException("Room insertion was interupted by an error." + room + ex, ex);
         }
     }
@@ -76,6 +83,8 @@ public class RoomManagerImpl implements RoomManager {
 
 
         } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "There has been an error while retrieving "
+                    + "entity with given ID" + id, ex);
             throw new RoomManagerException("There has been an error while retrieving "
                     + "entity with given ID" + id, ex);
         }
@@ -99,6 +108,7 @@ public class RoomManagerImpl implements RoomManager {
             statement.setLong(5, room.getID());
 
             int count = statement.executeUpdate();
+            DBUtils.checkUpdatesCount(count, room, true);
             if (count == 0){
                 throw new RoomManagerException("Room" + room + "not found in database.");
             } else if (count != 1){
@@ -107,6 +117,7 @@ public class RoomManagerImpl implements RoomManager {
 
 
         } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "There has been an error while updating a room "+ room, ex);
             throw new RoomManagerException("There has been an error while updating a room "+ room, ex);
         }
 
@@ -127,6 +138,7 @@ public class RoomManagerImpl implements RoomManager {
             statement.setLong(1, room.getID());
 
             int count = statement.executeUpdate();
+            DBUtils.checkUpdatesCount(count, room, true);
             if (count == 0){
                 throw new RoomManagerException("Room doesnt exist in database" + room);
             } else if (count != 1){
@@ -134,6 +146,7 @@ public class RoomManagerImpl implements RoomManager {
             }
 
         } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "There has been an error while deleting a room"+ room, ex);
             throw new RoomManagerException("There has been an error while deleting a room" + room, ex);
         }
 
@@ -155,6 +168,8 @@ public class RoomManagerImpl implements RoomManager {
             return result;
 
         }catch (SQLException ex) {
+            logger.log(Level.SEVERE, "There has been an error while getting all rooms"
+                    + " with given number", ex);
             throw new RoomManagerException(" There has been an error while getting all rooms"
                     + " with given number");
         }
@@ -174,6 +189,7 @@ public class RoomManagerImpl implements RoomManager {
             return result;
 
         }catch (SQLException ex) {
+            logger.log(Level.SEVERE, "There has been an error while getting all rooms", ex);
             throw new RoomManagerException(" There has been an error while getting all rooms");
         }
     }
@@ -209,7 +225,10 @@ public class RoomManagerImpl implements RoomManager {
                 }
                 return result;
             } catch (SQLException ex) {
-            throw new DatabaseException("Error when retrieving list of rents by date: " + ex, ex);
+                logger.log(Level.SEVERE, "Error when retrieving list of rents by date: " + startDate +
+                        " - " + endDate, ex);
+                throw new DatabaseException("Error when retrieving list of rents by date: " + startDate +
+                        " - " + endDate, ex);
             }
     }
 
