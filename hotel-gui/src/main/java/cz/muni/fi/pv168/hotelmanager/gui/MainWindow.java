@@ -267,6 +267,11 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         btnEditRent.setText(bundle.getString("MainWindow.btnEditRent.text")); // NOI18N
+        btnEditRent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditRentActionPerformed(evt);
+            }
+        });
 
         btnDeleteRent.setText(bundle.getString("MainWindow.btnDeleteRent.text")); // NOI18N
         btnDeleteRent.addActionListener(new java.awt.event.ActionListener() {
@@ -403,7 +408,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(btnResetGuest))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSearchRent))
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -485,9 +490,9 @@ public class MainWindow extends javax.swing.JFrame {
         tblRooms.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblRooms);
 
-        numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
+        numberValue.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 1L));
 
-        priceValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), null, Long.valueOf(1L)));
+        priceValue.setModel(new javax.swing.SpinnerNumberModel(0L, 0L, null, 1L));
 
         jLabel5.setText(bundle.getString("MainWindow.jLabel5.text")); // NOI18N
 
@@ -1005,6 +1010,43 @@ public class MainWindow extends javax.swing.JFrame {
         chosenGuest = null;
         txtChosenGuest.setText("");
     }//GEN-LAST:event_btnResetGuestActionPerformed
+
+    private void btnEditRentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditRentActionPerformed
+        int row = tblRents.getSelectedRow();
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "No rent selected.");
+        }
+        else {
+            RentsTableModel model = (RentsTableModel) tblRents.getModel();
+            Rent r = model.getRow(row);
+            setRentEditorValues(r);
+            int res = JOptionPane.showConfirmDialog(null, rentEditorPanel,
+                    "Edit rent", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE);
+            if (res == JOptionPane.OK_OPTION) {
+                Rent newRent = getRentFromEditor();
+                newRent.setID(r.getID());
+
+                class RentEditSwingWorker extends SwingWorker<Void,Void> {
+                    @Override
+                    protected Void doInBackground() throws Exception {
+                        RentManager manager = new RentManagerImpl(source);
+                        manager.updateRent(newRent);
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        model.editRent(newRent, row);
+                        logger.log(Level.INFO, "rent edited{0} to {1}", new Object[]{row, newRent});
+                    }
+                }
+
+                RentEditSwingWorker worker = new RentEditSwingWorker();
+                worker.execute();
+            }
+        }
+    }//GEN-LAST:event_btnEditRentActionPerformed
 
     private LocalDate getSince() {
         Date date = (Date) spinnerDateSince.getValue();
