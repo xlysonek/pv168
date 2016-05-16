@@ -160,6 +160,7 @@ public class MainWindow extends javax.swing.JFrame {
         capacityValue = new javax.swing.JSpinner();
         priceValue = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
+        roomResetButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -489,11 +490,19 @@ public class MainWindow extends javax.swing.JFrame {
         tblRooms.getTableHeader().setReorderingAllowed(false);
         jScrollPane3.setViewportView(tblRooms);
 
-        numberValue.setModel(new javax.swing.SpinnerNumberModel(0L, null, null, 1L));
+        numberValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), null, null, Long.valueOf(1L)));
 
-        priceValue.setModel(new javax.swing.SpinnerNumberModel(0L, 0L, null, 1L));
+        priceValue.setModel(new javax.swing.SpinnerNumberModel(Long.valueOf(0L), Long.valueOf(0L), null, Long.valueOf(1L)));
 
         jLabel5.setText(bundle.getString("MainWindow.jLabel5.text")); // NOI18N
+
+        java.util.ResourceBundle bundle1 = java.util.ResourceBundle.getBundle("cz/muni/fi/pv168/hotelmanager/gui/Bundle"); // NOI18N
+        roomResetButton.setText(bundle1.getString("MainWindow.roomResetButton.text")); // NOI18N
+        roomResetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roomResetButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -517,11 +526,14 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(serviceValue))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(serachRoom)
                             .addComponent(jLabel3)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 97, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(serachRoom)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(roomResetButton)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -554,9 +566,11 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(serviceValue)
                             .addComponent(jLabel5))
                         .addGap(7, 7, 7)
-                        .addComponent(serachRoom)
-                        .addGap(0, 102, Short.MAX_VALUE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 419, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(serachRoom)
+                            .addComponent(roomResetButton))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -1047,6 +1061,36 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEditRentActionPerformed
 
+    private void roomResetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomResetButtonActionPerformed
+
+        class RoomSearchSwingWorker extends SwingWorker<List<Room>,Void> {
+            @Override
+            protected List<Room> doInBackground() throws Exception {
+                RoomManager manager = new RoomManagerImpl(source);
+                List<Room> res;
+                res = manager.getAllRooms();
+                return res;
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    loadRooms(get());
+                }
+                catch (ExecutionException ee) {
+                    JOptionPane.showMessageDialog(null, "Execution of room search reset thread has failed " + ee);
+                    System.exit(0);
+                }
+                catch (InterruptedException ie) {
+                    JOptionPane.showMessageDialog(null, "Room search reset has been interuppted " + ie);
+                    System.exit(0);
+                }
+            }
+        }
+        RoomSearchSwingWorker worker = new RoomSearchSwingWorker();
+        worker.execute();
+    }//GEN-LAST:event_roomResetButtonActionPerformed
+
     private LocalDate getSince() {
         Date date = (Date) spinnerDateSince.getValue();
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -1226,6 +1270,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JSpinner numberValue;
     private javax.swing.JSpinner priceValue;
+    private javax.swing.JButton roomResetButton;
     private javax.swing.JButton serachRoom;
     private javax.swing.JCheckBox serviceValue;
     private javax.swing.JSpinner spinnerDateSince;
