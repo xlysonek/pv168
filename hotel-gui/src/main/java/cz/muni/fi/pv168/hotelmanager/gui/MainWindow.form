@@ -341,7 +341,7 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="btnSearchRent" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jScrollPane5" alignment="1" pref="421" max="32767" attributes="0"/>
+                          <Component id="jScrollPane5" alignment="1" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -362,6 +362,9 @@
                           <ResourceString bundle="cz/muni/fi/pv168/hotelmanager/gui/Bundle_en_US.properties" key="MainWindow.btnEditRent.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnEditRentActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="btnDeleteRent">
                       <Properties>
