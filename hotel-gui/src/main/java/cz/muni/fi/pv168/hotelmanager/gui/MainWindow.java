@@ -20,7 +20,6 @@ import cz.muni.fi.pv168.hotelmanager.backend.RoomManagerImpl;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.ZoneId;
-import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -1141,7 +1140,7 @@ public class MainWindow extends javax.swing.JFrame {
     NumberFormat enFormat = NumberFormat.getCurrencyInstance(czech);
     NumberFormat deFormat = NumberFormat.getCurrencyInstance(czech);
 
-    Currency crowns = Currency.getInstance("CZ");
+    //Currency crowns = Currency.getInstance("CZ");
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
