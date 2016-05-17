@@ -537,7 +537,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="editRoom" max="32767" attributes="0"/>
-                          <Component id="deleteRoom" alignment="0" pref="223" max="32767" attributes="0"/>
+                          <Component id="deleteRoom" alignment="0" max="32767" attributes="0"/>
                           <Component id="addRoom" alignment="0" max="32767" attributes="0"/>
                           <Component id="jSeparator1" max="32767" attributes="0"/>
                           <Component id="numberValue" alignment="0" max="32767" attributes="0"/>
@@ -554,7 +554,7 @@
                                   <Component id="jLabel2" alignment="0" min="-2" pref="130" max="-2" attributes="0"/>
                                   <Component id="jLabel1" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="97" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="serachRoom" min="-2" max="-2" attributes="0"/>

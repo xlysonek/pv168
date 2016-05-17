@@ -726,6 +726,11 @@ public class MainWindow extends javax.swing.JFrame {
                 JOptionPane.PLAIN_MESSAGE);
         if (res == JOptionPane.OK_OPTION) {
             Rent r = getRentFromEditor();
+            if (r.getStartDate() == null || r.getEndDate() == null
+                || r.getGuest() == null || r.getRoom() == null) {
+                JOptionPane.showMessageDialog(null, "Some values were not specified");
+                return;
+            }
             RentsTableModel model = (RentsTableModel) tblRents.getModel();
 
             class RentAddSwingWorker extends SwingWorker<Void,Void> {
@@ -1038,6 +1043,11 @@ public class MainWindow extends javax.swing.JFrame {
                     JOptionPane.PLAIN_MESSAGE);
             if (res == JOptionPane.OK_OPTION) {
                 Rent newRent = getRentFromEditor();
+                if (newRent.getStartDate() == null || newRent.getEndDate() == null
+                    || newRent.getGuest() == null || newRent.getRoom() == null) {
+                    JOptionPane.showMessageDialog(null, "Some values were not specified");
+                return;
+            }
                 newRent.setID(r.getID());
 
                 class RentEditSwingWorker extends SwingWorker<Void,Void> {
